@@ -1,2 +1,2 @@
-All Art and Sound Effects/Music are created by TOBY FOX and ROYAL SCIENCES/ the DELTARUNE team. 
+All Art and Sound Effects/Music are created by TOBY FOX and ROYAL SCIENCES/ the DELTARUNE team. Sprite rips were found on Spriters Resource
 Most of the code is written by me, with credit to Juju Adams, Alynne Keith, and Friends for the amazing Scribble and Input packages.
