@@ -1,0 +1,78 @@
+#region ENUMs
+
+enum BATTLEPHASE
+{
+	// Beginning of battle load animation
+	BATTLESTART,
+	
+	// Player's Turn
+	SELECT,
+	ACT,
+	FIGHT,
+	ITEM,
+	// Animations during battlebox phase in part (In between player turn and enemy turn)
+	PLAYERTOENEMYTRANSITION,
+	// Animations during battlebox phase in part (In between enemy turn and player turn)
+	ENEMYTOPLAYERTRANSITION,
+	
+	//End of battle animation
+	BATTLEEND
+}
+
+#endregion
+
+global.BattleController = -1;
+
+party_array = [CHARACTERS.Kris, CHARACTERS.Susie, CHARACTERS.Ralsei];
+
+//show_debug_message(CharaData_From_CharaID(party_array[0]));
+
+#region Tension Meter Variables
+
+// Set up variable for the TP meter to be drawn to (so that i can just move the surface when I want to)
+surface_TPmeter = -1;
+
+// Manipulate this to change the entire meters position
+surface_TPmeter_draw = new Vector2();
+
+global.TP             = 0;   // Actual TP
+global.MaxTP          = 100; // Max TP
+global.TensionHovered = 0;   // Cost of selected ACT/MAGIC
+
+false_TP = global.TP;
+false_TP_update = 0;
+
+// How full is the tension meter
+tension_percent       = global.TP / global.MaxTP;
+false_tension_percent = false_TP / global.MaxTP;
+
+// Position to draw the meter in
+tensionmeter_mainmeter_draw = new Vector2(50, 140);
+
+// Position to draw the TP icon
+tensionmeter_TPicon_draw    = new Vector2(19, 92);
+
+// Draw location for the text/numbers
+tensionmeter_text_draw      = new Vector2(6, 110);
+
+// Draw location for the percent sign
+tensionmeter_pcnt_draw      = new Vector2(11, 135);
+
+// Draw locations for the main meter draw_rectangle
+tensionmeter_rect_topleft   = new Vector2(40, 47);
+tensionmeter_rect_btmright  = new Vector2(60, 234);
+
+// How large is the main TP bar in px
+tensionmeter_height			= 187;
+
+// Var for making opacity do the cool shimmer thing
+tensionmeter_alpha_pulser = 0;
+
+// Sprites (Base game uses the redfill when the bar decreases and the whitefill for increases)
+tensionmeter_spr_outline        = spr_BattleRoom_TensionMeter_MeterOutline
+tensionmeter_spr_background     = spr_BattleRoom_TensionMeter_MeterBackground;
+tensionmeter_spr_cutout         = spr_BattleRoom_TensionMeter_MeterCutout;
+tensionmeter_spr_tension_marker = spr_BattleRoom_TensionMeter_TensionMarker;
+tensionmeter_spr_TPicon	        = spr_BattleRoom_TensionMeter_TPIcon;
+
+#endregion

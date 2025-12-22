@@ -1,0 +1,18 @@
+Variables:
+
+Global:
+Camel Case, no spaces or underscores
+
+Instance:
+Underscores between each word, usually all lowercause unless variable contains an acronym
+
+Local:
+Same as global
+
+Sprites:
+
+spr_ prefix
+Name is in camelcase
+
+Ex:
+spr_WhereTheSpriteIsFound_Category_SpriteName

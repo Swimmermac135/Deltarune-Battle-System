@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"StartEncounter_FreddyFasbear",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"StartEncounter_FreddyFasbear",
+  "parent":{
+    "name":"FreddyEncounter",
+    "path":"folders/FreddyEncounter.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
