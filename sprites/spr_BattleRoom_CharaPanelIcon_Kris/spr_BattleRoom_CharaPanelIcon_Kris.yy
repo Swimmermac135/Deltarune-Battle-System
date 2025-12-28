@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"Kris",
-    "path":"folders/Battle System/Sprites/Character TurnAction Icons/Kris.yy",
+    "path":"folders/[3] Battle System/Sprites/Character TurnAction Icons/Kris.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

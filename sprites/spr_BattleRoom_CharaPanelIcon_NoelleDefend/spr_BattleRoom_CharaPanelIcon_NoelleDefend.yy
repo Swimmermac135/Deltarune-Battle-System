@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"Noelle",
-    "path":"folders/Battle System/Sprites/Character TurnAction Icons/Noelle.yy",
+    "path":"folders/[3] Battle System/Sprites/Character TurnAction Icons/Noelle.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

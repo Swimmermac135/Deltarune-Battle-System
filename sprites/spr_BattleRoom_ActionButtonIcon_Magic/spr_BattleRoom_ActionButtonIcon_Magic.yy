@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"Action Buttons",
-    "path":"folders/Battle System/Sprites/Action Buttons.yy",
+    "path":"folders/[3] Battle System/Sprites/Action Buttons.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

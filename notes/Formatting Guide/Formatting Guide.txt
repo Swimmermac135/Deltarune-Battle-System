@@ -7,7 +7,7 @@ Instance:
 Underscores between each word, usually all lowercause unless variable contains an acronym
 
 Local:
-Same as global
+lower camelcase with no spaces or underscores
 
 Sprites:
 

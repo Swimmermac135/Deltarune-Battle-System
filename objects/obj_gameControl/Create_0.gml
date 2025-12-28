@@ -29,6 +29,7 @@ global.CharacterRefMap = ds_map_create();
 
 enum CHARACTERS
 {
+	None,
 	Kris,
 	Susie,
 	Ralsei,
@@ -38,6 +39,8 @@ enum CHARACTERS
 
 characterData_Kris = 
 {
+	
+	characterName : "Kris",
 	
 	characterUsesAct     : true,
 	
@@ -55,6 +58,8 @@ characterData_Kris =
 	characterIconSelectHeal : spr_BattleRoom_CharaPanelIcon_KrisSelectForHeal,
 	
 	// Need to add: all animations, idle sprite, etc
+	characterAnimationIdle  : spr_BattleRoom_CharaAnimation_KrisIdle,
+	characterAnimationIntro : spr_BattleRoom_CharaAnimation_KrisAttack,
 	
 }
 
@@ -62,6 +67,8 @@ ds_map_add(global.CharacterRefMap, CHARACTERS.Kris, characterData_Kris);
 
 characterData_Susie = 
 {
+	
+	characterName : "Susie",
 	
 	characterUsesAct     : false,
 	
@@ -78,12 +85,16 @@ characterData_Susie =
 	characterIconSleep      : spr_BattleRoom_CharaPanelIcon_SusieSleep,
 	characterIconSelectHeal : spr_BattleRoom_CharaPanelIcon_SusieSelectForHeal,
 	
+	characterAnimationIdle  : spr_BattleRoom_CharaAnimation_SusieIdle,
+	characterAnimationIntro : spr_BattleRoom_CharaAnimation_SusieIntro,
 }
 
 ds_map_add(global.CharacterRefMap, CHARACTERS.Susie, characterData_Susie);
 
 characterData_Ralsei = 
 {
+	
+	characterName : "Ralsei",
 	
 	characterUsesAct     : false,
 	
@@ -100,8 +111,29 @@ characterData_Ralsei =
 	characterIconSleep      : spr_BattleRoom_CharaPanelIcon_RalseiSleep,
 	characterIconSelectHeal : spr_BattleRoom_CharaPanelIcon_RalseiSelectForHeal,
 	
+	characterAnimationIdle  : spr_BattleRoom_CharaAnimation_RalseiIdle,
+	characterAnimationIntro : spr_BattleRoom_CharaAnimation_RalseiIntro,
 }
 
 ds_map_add(global.CharacterRefMap, CHARACTERS.Ralsei, characterData_Ralsei);
+
+#endregion
+
+#region Battle Related
+
+global.PartyArrayIndexes = [CHARACTERS.Kris, CHARACTERS.Susie, CHARACTERS.Ralsei];
+
+global.BattleSkipIntro = true;
+global.PartyArray = ds_list_create();
+global.LargePartyMode = false; // This will likely remain unused for a long time. If I decide to implement it, It will allow for 6v6 fights
+
+global.TPMeterFadeIn  = false;
+global.TPMeterFadeOut = false;
+
+#endregion
+
+#region Debug
+
+global.DebugMode = true;
 
 #endregion

@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Deltarune Battle System",
-    "path":"Deltarune Battle System.yyp",
+    "name":"Stolen Stuff",
+    "path":"folders/Stolen Stuff.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

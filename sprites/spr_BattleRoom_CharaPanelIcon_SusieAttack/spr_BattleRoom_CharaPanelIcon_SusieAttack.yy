@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"Susie",
-    "path":"folders/Battle System/Sprites/Character TurnAction Icons/Susie.yy",
+    "path":"folders/[3] Battle System/Sprites/Character TurnAction Icons/Susie.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

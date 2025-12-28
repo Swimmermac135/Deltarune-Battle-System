@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"Tension Meter",
-    "path":"folders/Battle System/Sprites/Tension Meter.yy",
+    "path":"folders/[3] Battle System/Sprites/Tension Meter.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

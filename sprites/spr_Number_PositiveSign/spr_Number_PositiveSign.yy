@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"Numbers",
-    "path":"folders/Battle System/Sprites/Numbers.yy",
+    "path":"folders/[3] Battle System/Sprites/Numbers.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

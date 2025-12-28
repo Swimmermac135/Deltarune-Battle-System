@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"Character Panels",
-    "path":"folders/Battle System/Sprites/Character Panels.yy",
+    "path":"folders/[3] Battle System/Sprites/Character Panels.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

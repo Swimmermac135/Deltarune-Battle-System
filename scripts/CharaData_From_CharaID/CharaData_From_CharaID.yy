@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"CharaData_From_CharaID",
   "parent":{
-    "name":"Character Data",
-    "path":"folders/Battle System/Scripts/Character Data.yy",
+    "name":"Scripts",
+    "path":"folders/[3] Battle System/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
