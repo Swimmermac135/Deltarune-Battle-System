@@ -179,7 +179,7 @@ global.BattleSkipIntro = true;
 global.PartyArray = ds_list_create();
 global.LargePartyMode = false; // This will likely remain unused for a long time. If I decide to implement it, It will allow for 6v6 fights
 global.OffsetPartyDraw = false; // This is annoying but sometimes with two person parties it looks nice if the two are offset from the center instead of the side. Go look at the chapter 2 rouxls fight
-global.MyFight         = false; // This one will probably actually never be needed but it is better to have it than not. All it does is remove player choice for cutscene fights like susie vs lancer in ch1
+global.MyFight         = true; // This one will probably actually never be needed but it is better to have it than not. All it does is remove player choice for cutscene fights like susie vs lancer in ch1
 
 #endregion
 

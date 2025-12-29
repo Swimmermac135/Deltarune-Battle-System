@@ -36,7 +36,6 @@ enum ACTION
 	ITEM,
 	SPARE,
 	DEFEND,
-	NONE
 }
 
 #endregion
@@ -169,8 +168,27 @@ else
 // Who is currently selecting their action
 chara_currently_selecting_action = 0;
 
+// Who is currently selecting their action
+currently_hovered_action = ACTION.ATTACK;
+
+action_button_padding = new Vector2(5, 3);
+
 // Sprites
 mainmenu_spr_background = spr_BattleRoom_MainMenu_Background;
+
+mainmenu_spr_actionicon_attack = spr_BattleRoom_ActionButtonIcon_Attack;
+mainmenu_spr_actionicon_act    = spr_BattleRoom_ActionButtonIcon_Act;
+mainmenu_spr_actionicon_magic  = spr_BattleRoom_ActionButtonIcon_Magic;
+mainmenu_spr_actionicon_item   = spr_BattleRoom_ActionButtonIcon_Item;
+mainmenu_spr_actionicon_spare  = spr_BattleRoom_ActionButtonIcon_Spare;
+mainmenu_spr_actionicon_defend = spr_BattleRoom_ActionButtonIcon_Defend;
+
+mainmenu_spr_actionicon_attack_selected  = spr_BattleRoom_ActionButtonIcon_AttackSelected;
+mainmenu_spr_actionicon_act_selected     = spr_BattleRoom_ActionButtonIcon_ActSelected;
+mainmenu_spr_actionicon_magic_selected   = spr_BattleRoom_ActionButtonIcon_MagicSelected;
+mainmenu_spr_actionicon_item_selected    = spr_BattleRoom_ActionButtonIcon_ItemSelected;
+mainmenu_spr_actionicon_spare_selected   = spr_BattleRoom_ActionButtonIcon_SpareSelected;
+mainmenu_spr_actionicon_defend_selected  = spr_BattleRoom_ActionButtonIcon_DefendSelected;
 
 // Colors
 mainmenu_col_linework   = $332033;

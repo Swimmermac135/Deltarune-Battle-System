@@ -124,6 +124,61 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 		var _currentEntry = global.PartyArray[| i].CharaData;
 		var _charaPanelAnchorX = mainmenu_charapanels_draw[i].x;
 		var _charaPanelAnchorY = global.PartyArray[| i].CharaData.characterPanelCurrentDrawY;
+		var _ActionIconOffset  = (sprite_get_width(spr_BattleRoom_ActionButtonIcon_Item) + action_button_padding.x);
+		
+		// Draw buttons behind panels. Sidenote: holy if statement
+		if(i == chara_currently_selecting_action)
+		{
+			if(currently_hovered_action == ACTION.ATTACK)
+				draw_sprite(mainmenu_spr_actionicon_attack_selected, 0, _charaPanelAnchorX - _ActionIconOffset * 2, mainmenu_charapanel_closed_y + action_button_padding.y);
+			else
+				draw_sprite(mainmenu_spr_actionicon_attack, 0, _charaPanelAnchorX - _ActionIconOffset * 2, mainmenu_charapanel_closed_y + action_button_padding.y);
+			
+
+			if(_currentEntry.characterUsesAct)
+			{
+				if(currently_hovered_action == ACTION.MAGICORACT)
+					draw_sprite(mainmenu_spr_actionicon_act_selected, 0, _charaPanelAnchorX - (sprite_get_width(spr_BattleRoom_ActionButtonIcon_Item) + action_button_padding.x), mainmenu_charapanel_closed_y + action_button_padding.y);
+				else
+					draw_sprite(mainmenu_spr_actionicon_act, 0, _charaPanelAnchorX - (sprite_get_width(spr_BattleRoom_ActionButtonIcon_Item) + action_button_padding.x), mainmenu_charapanel_closed_y + action_button_padding.y);
+			}
+			else
+			{
+				if(currently_hovered_action == ACTION.MAGICORACT)
+					draw_sprite(mainmenu_spr_actionicon_magic_selected, 0, _charaPanelAnchorX - (sprite_get_width(spr_BattleRoom_ActionButtonIcon_Item) + action_button_padding.x), mainmenu_charapanel_closed_y + action_button_padding.y);
+				else
+					draw_sprite(mainmenu_spr_actionicon_magic, 0, _charaPanelAnchorX - (sprite_get_width(spr_BattleRoom_ActionButtonIcon_Item) + action_button_padding.x), mainmenu_charapanel_closed_y + action_button_padding.y);
+			}
+			
+			if(currently_hovered_action == ACTION.ITEM)
+				draw_sprite(mainmenu_spr_actionicon_item_selected,   0, _charaPanelAnchorX, mainmenu_charapanel_closed_y + action_button_padding.y);
+			else
+				draw_sprite(mainmenu_spr_actionicon_item,   0, _charaPanelAnchorX, mainmenu_charapanel_closed_y + action_button_padding.y);
+				
+			if(currently_hovered_action == ACTION.SPARE)
+				draw_sprite(mainmenu_spr_actionicon_spare_selected,  0, _charaPanelAnchorX + _ActionIconOffset, mainmenu_charapanel_closed_y + action_button_padding.y);
+			else
+				draw_sprite(mainmenu_spr_actionicon_spare,   0, _charaPanelAnchorX + _ActionIconOffset, mainmenu_charapanel_closed_y + action_button_padding.y);
+				
+			if(currently_hovered_action == ACTION.DEFEND)
+				draw_sprite(mainmenu_spr_actionicon_defend_selected, 0, _charaPanelAnchorX + _ActionIconOffset * 2, mainmenu_charapanel_closed_y + action_button_padding.y);
+			else
+				draw_sprite(mainmenu_spr_actionicon_defend,   0, _charaPanelAnchorX + _ActionIconOffset * 2, mainmenu_charapanel_closed_y + action_button_padding.y);
+				
+		}
+		else if(_currentEntry.characterPanelState != CHARAPANELSTATE.CLOSED)
+		{
+			draw_sprite(mainmenu_spr_actionicon_attack, 0, _charaPanelAnchorX - _ActionIconOffset * 2, mainmenu_charapanel_closed_y + action_button_padding.y);
+			
+			if(_currentEntry.characterUsesAct)
+				draw_sprite(mainmenu_spr_actionicon_act,   0, _charaPanelAnchorX - (sprite_get_width(spr_BattleRoom_ActionButtonIcon_Item) + action_button_padding.x), mainmenu_charapanel_closed_y + action_button_padding.y);
+			else
+				draw_sprite(mainmenu_spr_actionicon_magic, 0, _charaPanelAnchorX - (sprite_get_width(spr_BattleRoom_ActionButtonIcon_Item) + action_button_padding.x), mainmenu_charapanel_closed_y + action_button_padding.y);
+				
+			draw_sprite(mainmenu_spr_actionicon_item,   0, _charaPanelAnchorX, mainmenu_charapanel_closed_y + action_button_padding.y);
+			draw_sprite(mainmenu_spr_actionicon_spare,  0, _charaPanelAnchorX + _ActionIconOffset, mainmenu_charapanel_closed_y + action_button_padding.y);
+			draw_sprite(mainmenu_spr_actionicon_defend, 0, _charaPanelAnchorX + _ActionIconOffset * 2, mainmenu_charapanel_closed_y + action_button_padding.y);
+		}
 		
 		draw_sprite(_currentEntry.characterPanel, 0, _charaPanelAnchorX, _charaPanelAnchorY);
 		draw_sprite(_currentEntry.characterIcon,  0, _charaPanelAnchorX + _currentEntry.characterIconPortraitOffset.x, _charaPanelAnchorY +_currentEntry.characterIconPortraitOffset.y); // Needs to account for character injured later
@@ -151,13 +206,14 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 			draw_line_width(_charaPanelAnchorX + 105, _charaPanelAnchorY - 19, _charaPanelAnchorX + 105, mainmenu_charapanel_closed_y + (sprite_get_height(spr_BattleRoom_CharaPanel_Template) / 2) - 2, 2);
 			
 			draw_set_colour(c_white);
-			
+				
 		}
 		else
 		{
 			// Begin closing panel if open
 			if(_currentEntry.characterPanelState == CHARAPANELSTATE.OPEN)
 				_currentEntry.characterPanelState = CHARAPANELSTATE.CLOSING;
+			
 		}
 		
 		

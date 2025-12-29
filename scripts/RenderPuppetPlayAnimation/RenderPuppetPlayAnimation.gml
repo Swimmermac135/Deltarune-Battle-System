@@ -1,4 +1,4 @@
-function RenderPuppetPlayAnimation(_renderPuppet, _animation, _imageSpeed = 1, _interrupt = true, _playOnce = false){
+function RenderPuppetPlayAnimation(_renderPuppet, _animation, _imageSpeed = 1, _playOnce = false, _interrupt = true){
 	
 	if(_interrupt || (!_interrupt && _renderPuppet.animation_ongoing == false))
 	{

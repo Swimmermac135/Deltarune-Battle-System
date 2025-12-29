@@ -7,8 +7,8 @@ if(keyboard_check_pressed(vk_numpad7)) {TPMeterSlideOut();}
 if(keyboard_check_pressed(vk_numpad6)) {MainMenuSlideIn();}
 if(keyboard_check_pressed(vk_numpad5)) {MainMenuSlideOut();}
 
-if(keyboard_check_pressed(vk_numpad4) && chara_currently_selecting_action < ds_list_size(global.PartyArray)-1) {chara_currently_selecting_action++;}
-if(keyboard_check_pressed(vk_numpad3) && chara_currently_selecting_action > 0) {chara_currently_selecting_action--;}
+if(keyboard_check_pressed(vk_numpad4) && chara_currently_selecting_action < ds_list_size(global.PartyArray)-1) {chara_currently_selecting_action++; currently_hovered_action = ACTION.ATTACK;}
+if(keyboard_check_pressed(vk_numpad3) && chara_currently_selecting_action > 0) {chara_currently_selecting_action--; currently_hovered_action = ACTION.ATTACK;}
 
 if(keyboard_check(vk_numpad1)) {AddTP(5);}
 if(keyboard_check(vk_numpad2)) {RemoveTP(5);}
@@ -77,13 +77,6 @@ if(global.BattleState == BATTLESTATE.CHARACTERINTRO)
 	
 	if(ds_list_size(character_animations_complete) >= ds_list_size(global.PartyArray))
 	{
-		// Reset image speeds and animcomplete
-		for (var i = 0; i < ds_list_size(global.PartyArray); i++) 
-		{
-			var _currentEntry = global.PartyArray[| i];
-			_currentEntry.RenderPuppet.image_speed = 1;
-		}
-		
 		ds_list_clear(character_animations_complete);
 		global.BattleState = BATTLESTATE.BATTLESTART;
 		ShowDebugMessageExt("BATTLESYSTEM", "Battle CHARACTER INTRO Phase Complete. Proceeding to BATTLE START");
@@ -104,8 +97,7 @@ if(global.BattleState == BATTLESTATE.BATTLESTART)
 			RenderPuppetPlayAnimation(_currentEntry.RenderPuppet, _currentEntry.CharaData.characterAnimationIdle);
 	}
 	
-	
-	if(!global.MyFight)
+	if(global.MyFight)
 	{
 		// Main menu and TP meter fade in
 		if(!TPMeterIsIn())
@@ -114,6 +106,9 @@ if(global.BattleState == BATTLESTATE.BATTLESTART)
 		if(!MainMenuIsIn())
 			MainMenuSlideIn();
 	}
+	
+	global.BattleState = BATTLESTATE.PLAYERSELECTING;
+	ShowDebugMessageExt("BATTLESYSTEM", "Battle START Phase Complete. Proceeding to PLAYER TURN");
 }
 
 #endregion
@@ -219,6 +214,70 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 		}
 	}
 	
+}
+
+#endregion
+
+#region Action Selection
+
+// In hindsight just having a number instead of an ENUM would have worked for this
+if(BATTLESTATE.PLAYERSELECTING)
+{
+	if(InputPressed(INPUT_VERB.RIGHT))
+	{
+		switch (currently_hovered_action)
+		{
+			case ACTION.DEFEND:
+				currently_hovered_action = ACTION.ATTACK;
+			break;
+			
+			case ACTION.ATTACK:
+				currently_hovered_action = ACTION.MAGICORACT;
+			break;
+			
+			case ACTION.MAGICORACT:
+				currently_hovered_action = ACTION.ITEM;
+			break;
+			
+			case ACTION.ITEM:
+				currently_hovered_action = ACTION.SPARE;
+			break;
+			
+			case ACTION.SPARE:
+				currently_hovered_action = ACTION.DEFEND;
+			break;	
+		}
+		audio_play_sound(snd_UTDRSqueak,1,0);
+	}
+	
+	if(InputPressed(INPUT_VERB.LEFT))
+	{
+		switch (currently_hovered_action)
+		{
+			case ACTION.DEFEND:
+				currently_hovered_action = ACTION.SPARE;
+			break;
+			
+			case ACTION.SPARE:
+				currently_hovered_action = ACTION.ITEM;
+			break;
+			
+			case ACTION.ITEM:
+				currently_hovered_action = ACTION.MAGICORACT;
+			break;
+			
+			case ACTION.MAGICORACT:
+				currently_hovered_action = ACTION.ATTACK;
+			break;
+			
+			case ACTION.ATTACK:
+				currently_hovered_action = ACTION.DEFEND;
+			break;
+		
+		}
+		audio_play_sound(snd_UTDRSqueak,1,0);
+	}
+
 }
 
 #endregion
