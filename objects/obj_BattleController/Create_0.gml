@@ -7,6 +7,7 @@ enum BATTLESTATE
 	BATTLESTART,	// Final setup and battle element load ins (menu and TP bar)
 	
 	// Player's Turn
+	PLAYERSELECTING,
 	SELECT,
 	ACT,
 	FIGHT,
@@ -18,6 +19,24 @@ enum BATTLESTATE
 	
 	//End of battle animation
 	BATTLEEND
+}
+
+enum CHARAPANELSTATE
+{
+	CLOSED,
+	OPENING,
+	OPEN,
+	CLOSING
+}
+
+enum ACTION
+{
+	ATTACK,
+	MAGICORACT,
+	ITEM,
+	SPARE,
+	DEFEND,
+	NONE
 }
 
 #endregion
@@ -51,6 +70,9 @@ enemy_renderpuppet_setup_complete = true;
 #region Tension Meter Variables
 
 /* Variables are all stored here to both avoid magic numbers and so I can change them later mid-fight if I want to. I don't have any plans for it but the option is there */
+
+global.TPMeterSlideIn  = false;
+global.TPMeterSlideOut = false;
 
 // Set up variable for the TP meter to be drawn to
 surface_TPmeter = -1;
@@ -98,23 +120,60 @@ tensionmeter_spr_cutout         = spr_BattleRoom_TensionMeter_MeterCutout;
 tensionmeter_spr_tension_marker = spr_BattleRoom_TensionMeter_TensionMarker;
 tensionmeter_spr_TPicon	        = spr_BattleRoom_TensionMeter_TPIcon;
 
-//Colors
+// Colors
 tensionmeter_color_increase	    = c_white;
 tensionmeter_color_decrease		= c_red;
 tensionmeter_color_hover        = c_white;
-tensionmeter_color_cannotafford = c_white;
+tensionmeter_color_cannotafford = c_gray;
 tensionmeter_color_main			= c_orange;
 tensionmeter_color_maxxed		= merge_colour(c_yellow, c_orange, 0.5);
 tensionmeter_color_maxtextcol   = c_yellow;
+
 
 #endregion
 
 #region Main Menu Variables
 
+global.MainMenuSlideIn  = false;
+global.MainMenuSlideOut = false;
+
 // Set up variable for the TP meter to be drawn to
 surface_mainmenu = -1;
 
-// Manipulate this to change the entire meters position
-surface_mainmenu_draw = new Vector2(, 0);
+// Manipulate this to change the entire menu's position
+surface_mainmenu_draw = new Vector2(0, 490);
+
+// Draw position for the background
+mainmenu_background_draw = new Vector2(320, 142);
+
+// Y positions for closed and open tabs
+mainmenu_charapanel_closed_y = 85; 
+mainmenu_charapanel_open_y   = 51;
+
+// Thickness of panel outline
+mainmenu_charapanel_outlinethickness = 2;
+
+// Positions for action icons
+mainmenu_charapanel_actionicon_x = 0;
+
+// X positions for closed character tabs
+if(global.LargePartyMode)
+{
+	// Not Implemented
+}
+else if(array_length(global.PartyArrayIndexes) == 2 && global.OffsetPartyDraw) // This is stupid
+	mainmenu_charapanels_draw = [new Vector2(210, mainmenu_charapanel_closed_y), new Vector2(430, mainmenu_charapanel_closed_y)];
+else
+	mainmenu_charapanels_draw = [new Vector2(108, mainmenu_charapanel_closed_y), new Vector2(320, mainmenu_charapanel_closed_y), new Vector2(532, mainmenu_charapanel_closed_y)];
+
+// Who is currently selecting their action
+chara_currently_selecting_action = 0;
+
+// Sprites
+mainmenu_spr_background = spr_BattleRoom_MainMenu_Background;
+
+// Colors
+mainmenu_col_linework   = $332033;
+mainmenu_col_background = c_black; 
 
 #endregion

@@ -16,16 +16,16 @@ function RemoveTP(num){
 	
 }
 
-function TPMeterFadeIn()
+function TPMeterSlideIn()
 {
-	if(!global.TPMeterFadeIn && !global.TPMeterFadeOut)
-		global.TPMeterFadeIn = true;
+	if(!global.TPMeterSlideIn && !global.TPMeterSlideOut)
+		global.TPMeterSlideIn = true;
 }
 
-function TPMeterFadeOut()
+function TPMeterSlideOut()
 {
-	if(!global.TPMeterFadeIn && !global.TPMeterFadeOut)
-		global.TPMeterFadeOut = true;
+	if(!global.TPMeterSlideIn && !global.TPMeterSlideOut)
+		global.TPMeterSlideOut = true;
 }
 
 function TPMeterIsIn()

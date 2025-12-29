@@ -26,6 +26,7 @@ ds_list_add(global.AvailableCombatEncounters, encounter_FreddyFazCrew);
 #region Load Character Data
 
 global.CharacterRefMap = ds_map_create();
+global.CharacterCombatRefMap = ds_map_create();
 
 enum CHARACTERS
 {
@@ -44,8 +45,14 @@ characterData_Kris =
 	
 	characterUsesAct     : true,
 	
-	characterIcon		 : spr_BattleRoom_CharaPanelIcon_KrisInjured,
-	characterIconInjured : spr_BattleRoom_CharaPanelIcon_Kris,
+	characterPanel             : spr_BattleRoom_CharaPanel_Kris,
+	characterPanelExtColor     : #00FFFF,
+	characterPanelState        : CHARAPANELSTATE.CLOSED,
+	characterPanelCurrentDrawY : 85,
+	
+	characterIcon		        : spr_BattleRoom_CharaPanelIcon_Kris,
+	characterIconInjured        : spr_BattleRoom_CharaPanelIcon_KrisInjured,
+	characterIconPortraitOffset : new Vector2(-79, 3),
 	
 	characterIconAttack  : spr_BattleRoom_CharaPanelIcon_KrisAttack,
 	characterIconAct     : spr_BattleRoom_CharaPanelIcon_KrisAct,
@@ -72,8 +79,14 @@ characterData_Susie =
 	
 	characterUsesAct     : false,
 	
-	characterIcon		 : spr_BattleRoom_CharaPanelIcon_SusieInjured,
-	characterIconInjured : spr_BattleRoom_CharaPanelIcon_Susie,
+	characterPanel             : spr_BattleRoom_CharaPanel_Susie,
+	characterPanelExtColor     : #FF00FF,
+	characterPanelState        : CHARAPANELSTATE.CLOSED,
+	characterPanelCurrentDrawY : 85,
+	
+	characterIcon		        : spr_BattleRoom_CharaPanelIcon_Susie,
+	characterIconInjured        : spr_BattleRoom_CharaPanelIcon_SusieInjured,
+	characterIconPortraitOffset : new Vector2(-78, 3),
 	
 	characterIconAttack  : spr_BattleRoom_CharaPanelIcon_SusieAttack,
 	characterIconAct     : spr_BattleRoom_CharaPanelIcon_SusieAct,
@@ -98,8 +111,14 @@ characterData_Ralsei =
 	
 	characterUsesAct     : false,
 	
-	characterIcon		 : spr_BattleRoom_CharaPanelIcon_RalseiInjured,
-	characterIconInjured : spr_BattleRoom_CharaPanelIcon_Ralsei,
+	characterPanel             : spr_BattleRoom_CharaPanel_Ralsei,
+	characterPanelExtColor     : #00FF00,
+	characterPanelState        : CHARAPANELSTATE.CLOSED,
+	characterPanelCurrentDrawY : 85,
+	
+	characterIcon		        : spr_BattleRoom_CharaPanelIcon_Ralsei,
+	characterIconInjured        : spr_BattleRoom_CharaPanelIcon_RalseiInjured,
+	characterIconPortraitOffset : new Vector2(-76, 3),
 	
 	characterIconAttack  : spr_BattleRoom_CharaPanelIcon_RalseiAttack,
 	characterIconAct     : spr_BattleRoom_CharaPanelIcon_RalseiAct,
@@ -117,6 +136,39 @@ characterData_Ralsei =
 
 ds_map_add(global.CharacterRefMap, CHARACTERS.Ralsei, characterData_Ralsei);
 
+// This is kind of a silly way to add an empty space in the battle but this is the simplest way to make it work
+characterData_None = 
+{
+	
+	characterName : "",
+	
+	characterUsesAct     : false,
+	
+	characterPanel             : spr_none,
+	characterPanelExtColor     : $00FF00,
+	characterPanelState        : CHARAPANELSTATE.CLOSED,
+	characterPanelCurrentDrawY : 85,
+	
+	characterIcon		        : spr_none,
+	characterIconInjured        : spr_none,
+	characterIconPortraitOffset : new Vector2(),
+	
+	characterIconAttack  : spr_none,
+	characterIconAct     : spr_none,
+	characterIconMagic   : spr_none,
+	characterIconItem    : spr_none,
+	characterIconSpare   : spr_none,
+	characterIconDefend  : spr_none,
+	
+	characterIconSleep      : spr_none,
+	characterIconSelectHeal : spr_none,
+	
+	characterAnimationIdle  : spr_none,
+	characterAnimationIntro : spr_none,
+}
+
+ds_map_add(global.CharacterRefMap, CHARACTERS.None, characterData_None);
+
 #endregion
 
 #region Battle Related
@@ -126,9 +178,8 @@ global.PartyArrayIndexes = [CHARACTERS.Kris, CHARACTERS.Susie, CHARACTERS.Ralsei
 global.BattleSkipIntro = true;
 global.PartyArray = ds_list_create();
 global.LargePartyMode = false; // This will likely remain unused for a long time. If I decide to implement it, It will allow for 6v6 fights
-
-global.TPMeterFadeIn  = false;
-global.TPMeterFadeOut = false;
+global.OffsetPartyDraw = false; // This is annoying but sometimes with two person parties it looks nice if the two are offset from the center instead of the side. Go look at the chapter 2 rouxls fight
+global.MyFight         = false; // This one will probably actually never be needed but it is better to have it than not. All it does is remove player choice for cutscene fights like susie vs lancer in ch1
 
 #endregion
 

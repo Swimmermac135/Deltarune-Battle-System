@@ -2,22 +2,34 @@ if(global.BattleController == -1) //Might remove this later
 	global.BattleController = self;
 
 if(keyboard_check_pressed(vk_numpad9)) {game_restart();}
-if(keyboard_check_pressed(vk_numpad8)) {TPMeterFadeIn();}
-if(keyboard_check_pressed(vk_numpad7)) {TPMeterFadeOut();}
+if(keyboard_check_pressed(vk_numpad8)) {TPMeterSlideIn();}
+if(keyboard_check_pressed(vk_numpad7)) {TPMeterSlideOut();}
+if(keyboard_check_pressed(vk_numpad6)) {MainMenuSlideIn();}
+if(keyboard_check_pressed(vk_numpad5)) {MainMenuSlideOut();}
+
+if(keyboard_check_pressed(vk_numpad4) && chara_currently_selecting_action < ds_list_size(global.PartyArray)-1) {chara_currently_selecting_action++;}
+if(keyboard_check_pressed(vk_numpad3) && chara_currently_selecting_action > 0) {chara_currently_selecting_action--;}
+
+if(keyboard_check(vk_numpad1)) {AddTP(5);}
+if(keyboard_check(vk_numpad2)) {RemoveTP(5);}
+
 timer++;
 
 #region Set Up CharaData [LOAD]
 
 if(global.BattleState == BATTLESTATE.LOAD)
 {
+	
 	// PARTY
 	for (var i = 0; i < array_length(global.PartyArrayIndexes); i++) {
-	    var _renderPuppet = instance_create_depth(chara_renderpuppet_preset_locations[i].x, chara_renderpuppet_preset_locations[i].y, i, obj_RenderPuppet);
+		
+		var _renderPuppet = instance_create_depth(chara_renderpuppet_preset_locations[i].x, chara_renderpuppet_preset_locations[i].y, i, obj_RenderPuppet);
 		_renderPuppet.image_xscale = 2;
 		_renderPuppet.image_yscale = 2;
 		
 		ds_list_add(global.PartyArray, new CharacterDataFull(global.PartyArrayIndexes[i], _renderPuppet));
 		ShowDebugMessageExt("BATTLESYSTEM FULLDATA MAKER", $"Created Entry for Character {i}: {global.PartyArray[| i].CharaData.characterName}");
+		
 	}
 	chara_renderpuppet_setup_complete = true;
 }
@@ -57,7 +69,7 @@ if(global.BattleState == BATTLESTATE.CHARACTERINTRO)
 		//show_debug_message($"{_currentEntry.RenderPuppet.image_index} {_currentEntry.RenderPuppet.image_number}")	
 		
 		// Freeze animation if it's done
-		if(HasAnimationEnded(_currentEntry.RenderPuppet) && ds_list_find_index(character_animations_complete, _currentEntry) == -1)
+		if((HasAnimationEnded(_currentEntry.RenderPuppet) && ds_list_find_index(character_animations_complete, _currentEntry) == -1))
 		{
 			ds_list_add(character_animations_complete, _currentEntry)
 		}
@@ -92,10 +104,16 @@ if(global.BattleState == BATTLESTATE.BATTLESTART)
 			RenderPuppetPlayAnimation(_currentEntry.RenderPuppet, _currentEntry.CharaData.characterAnimationIdle);
 	}
 	
-	// Main menu and TP meter fade in
-	if(!TPMeterIsIn())
-		TPMeterFadeIn();
 	
+	if(!global.MyFight)
+	{
+		// Main menu and TP meter fade in
+		if(!TPMeterIsIn())
+			TPMeterSlideIn();
+		
+		if(!MainMenuIsIn())
+			MainMenuSlideIn();
+	}
 }
 
 #endregion
@@ -131,22 +149,78 @@ if(global.BattleState != BATTLESTATE.LOAD)
 	
 #region Meter Movement
 	
-	if(global.TPMeterFadeIn)
+if(global.TPMeterSlideIn)
+{
+	if(TPMeterIsIn())	
+		global.TPMeterSlideIn = false;
+	else
+		surface_TPmeter_draw.x = slerp(surface_TPmeter_draw.x, 0, 0.25, 1);
+}
+	
+if(global.TPMeterSlideOut)
+{
+	if(TPMeterIsOut())	
+		global.TPMeterSlideOut = false;
+	else
+		surface_TPmeter_draw.x = slerp(surface_TPmeter_draw.x, -90, 0.25, 1);
+}
+	
+#endregion
+
+
+
+#endregion
+
+#region Main Menu
+
+#region MainMenu Movement
+	
+if(global.MainMenuSlideIn)
+{
+	if(WithinBounds(surface_mainmenu_draw.y, 259, 261))	
+		global.MainMenuSlideIn = false;
+	else
+		surface_mainmenu_draw.y = slerp(surface_mainmenu_draw.y, 260, 0.25, 1);
+}
+	
+if(global.MainMenuSlideOut)
+{
+	if(WithinBounds(surface_mainmenu_draw.y, 489, 491))	
+		global.MainMenuSlideOut = false;
+	else
+		surface_mainmenu_draw.y = slerp(surface_mainmenu_draw.y, 490, 0.25, 1);
+}
+	
+#endregion
+
+#region Character Panel Movement
+
+for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
+	
+	// Ignore if there isnt actually a character there
+    if(global.PartyArray[| i].CharaID != CHARACTERS.None)
 	{
-		if(WithinBounds(surface_TPmeter_draw.x, -1, 1))	
-			global.TPMeterFadeIn = false;
-		else
-			surface_TPmeter_draw.x = slerp(surface_TPmeter_draw.x, 0, 0.25, -1, 1);
+		var _currentEntry = global.PartyArray[| i].CharaData;
+		
+		if(_currentEntry.characterPanelState == CHARAPANELSTATE.CLOSING)
+		{
+			_currentEntry.characterPanelCurrentDrawY = slerp(_currentEntry.characterPanelCurrentDrawY, mainmenu_charapanel_closed_y, 0.5, 1);
+			
+			if(_currentEntry.characterPanelCurrentDrawY == mainmenu_charapanel_closed_y)
+				_currentEntry.characterPanelState = CHARAPANELSTATE.CLOSED;
+		}
+		
+		if(_currentEntry.characterPanelState == CHARAPANELSTATE.OPENING)
+		{
+			_currentEntry.characterPanelCurrentDrawY = slerp(_currentEntry.characterPanelCurrentDrawY, mainmenu_charapanel_open_y, 0.5, 1);
+			
+			if(_currentEntry.characterPanelCurrentDrawY == mainmenu_charapanel_open_y)
+				_currentEntry.characterPanelState = CHARAPANELSTATE.OPEN;
+		}
 	}
 	
-	if(global.TPMeterFadeOut)
-	{
-		if(WithinBounds(surface_TPmeter_draw.x, -91, -89))	
-			global.TPMeterFadeOut = false;
-		else
-			surface_TPmeter_draw.x = slerp(surface_TPmeter_draw.x, -90, 0.25, -93, -87);
-	}
-	
+}
+
 #endregion
 
 #endregion
