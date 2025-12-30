@@ -61,6 +61,13 @@ characterData_Kris =
 	characterIconSpare   : spr_BattleRoom_CharaPanelIcon_KrisSpare,
 	characterIconDefend  : spr_BattleRoom_CharaPanelIcon_KrisDefend,
 	
+	characterActionIconAttack : [spr_BattleRoom_ActionButtonIcon_Attack, spr_BattleRoom_ActionButtonIcon_AttackSelected],
+	characterActionIconAct    : [spr_BattleRoom_ActionButtonIcon_Act,    spr_BattleRoom_ActionButtonIcon_ActSelected],
+	characterActionIconMagic  : [spr_BattleRoom_ActionButtonIcon_Magic,  spr_BattleRoom_ActionButtonIcon_MagicSelected],
+	characterActionIconItem   : [spr_BattleRoom_ActionButtonIcon_Item, spr_BattleRoom_ActionButtonIcon_ItemSelected],
+	characterActionIconSpare  : [spr_BattleRoom_ActionButtonIcon_Spare, spr_BattleRoom_ActionButtonIcon_SpareSelected],
+	characterActionIconDefend : [spr_BattleRoom_ActionButtonIcon_Defend, spr_BattleRoom_ActionButtonIcon_DefendSelected],
+	
 	characterIconSleep      : spr_BattleRoom_CharaPanelIcon_KrisSleep,
 	characterIconSelectHeal : spr_BattleRoom_CharaPanelIcon_KrisSelectForHeal,
 	
@@ -95,6 +102,13 @@ characterData_Susie =
 	characterIconSpare   : spr_BattleRoom_CharaPanelIcon_SusieSpare,
 	characterIconDefend  : spr_BattleRoom_CharaPanelIcon_SusieDefend,
 	
+	characterActionIconAttack : [spr_BattleRoom_ActionButtonIcon_Attack, spr_BattleRoom_ActionButtonIcon_AttackSelected],
+	characterActionIconAct    : [spr_BattleRoom_ActionButtonIcon_Act,    spr_BattleRoom_ActionButtonIcon_ActSelected],
+	characterActionIconMagic  : [spr_BattleRoom_ActionButtonIcon_Magic,  spr_BattleRoom_ActionButtonIcon_MagicSelected],
+	characterActionIconItem   : [spr_BattleRoom_ActionButtonIcon_Item, spr_BattleRoom_ActionButtonIcon_ItemSelected],
+	characterActionIconSpare  : [spr_BattleRoom_ActionButtonIcon_Spare, spr_BattleRoom_ActionButtonIcon_SpareSelected],
+	characterActionIconDefend : [spr_BattleRoom_ActionButtonIcon_Defend, spr_BattleRoom_ActionButtonIcon_DefendSelected],
+	
 	characterIconSleep      : spr_BattleRoom_CharaPanelIcon_SusieSleep,
 	characterIconSelectHeal : spr_BattleRoom_CharaPanelIcon_SusieSelectForHeal,
 	
@@ -126,6 +140,13 @@ characterData_Ralsei =
 	characterIconItem    : spr_BattleRoom_CharaPanelIcon_RalseiItem,
 	characterIconSpare   : spr_BattleRoom_CharaPanelIcon_RalseiSpare,
 	characterIconDefend  : spr_BattleRoom_CharaPanelIcon_RalseiDefend,
+	
+	characterActionIconAttack : [spr_BattleRoom_ActionButtonIcon_Attack, spr_BattleRoom_ActionButtonIcon_AttackSelected],
+	characterActionIconAct    : [spr_BattleRoom_ActionButtonIcon_Act,    spr_BattleRoom_ActionButtonIcon_ActSelected],
+	characterActionIconMagic  : [spr_BattleRoom_ActionButtonIcon_Magic,  spr_BattleRoom_ActionButtonIcon_MagicSelected],
+	characterActionIconItem   : [spr_BattleRoom_ActionButtonIcon_Item, spr_BattleRoom_ActionButtonIcon_ItemSelected],
+	characterActionIconSpare  : [spr_BattleRoom_ActionButtonIcon_Spare, spr_BattleRoom_ActionButtonIcon_SpareSelected],
+	characterActionIconDefend : [spr_BattleRoom_ActionButtonIcon_Defend, spr_BattleRoom_ActionButtonIcon_DefendSelected],
 	
 	characterIconSleep      : spr_BattleRoom_CharaPanelIcon_RalseiSleep,
 	characterIconSelectHeal : spr_BattleRoom_CharaPanelIcon_RalseiSelectForHeal,
@@ -159,6 +180,13 @@ characterData_None =
 	characterIconItem    : spr_none,
 	characterIconSpare   : spr_none,
 	characterIconDefend  : spr_none,
+	
+	characterActionIconAttack : [spr_none, spr_none],
+	characterActionIconAct    : [spr_none, spr_none],
+	characterActionIconMagic  : [spr_none, spr_none],
+	characterActionIconItem   : [spr_none, spr_none],
+	characterActionIconSpare  : [spr_none, spr_none],
+	characterActionIconDefend : [spr_none, spr_none],
 	
 	characterIconSleep      : spr_none,
 	characterIconSelectHeal : spr_none,

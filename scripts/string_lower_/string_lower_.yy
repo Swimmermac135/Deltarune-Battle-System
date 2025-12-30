@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"string_lower_",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"string_lower_",
+  "parent":{
+    "name":"Strings",
+    "path":"folders/XGASOFT/GML+/Scripts/Strings.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

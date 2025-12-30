@@ -13,8 +13,6 @@ if(keyboard_check_pressed(vk_numpad3) && chara_currently_selecting_action > 0) {
 if(keyboard_check(vk_numpad1)) {AddTP(5);}
 if(keyboard_check(vk_numpad2)) {RemoveTP(5);}
 
-timer++;
-
 #region Set Up CharaData [LOAD]
 
 if(global.BattleState == BATTLESTATE.LOAD)

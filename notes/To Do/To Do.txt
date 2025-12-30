@@ -1,0 +1,10 @@
+Refactor the icon loading so that characters can have unique action icons?
+|
+-> This would require changing how the icons are chosen and navigated. Instead of having the icons preset they would have to be
+|  added to a list or something. The feature that this would be used for would be for making the spare/attack for certain bossfight endings look slightly better.
+|  Though to be fair, this could probably just be done with an alphapulser and color blending the attack/magic/spare when they are applicable for the given situation.
+|  I think this happens in the base game when there is a spare/pacify available, though I don't know how yet. 
+|
+-> I could do a half method where each character animation set has an override flag and if there is a flag use that?
+-> Actually I am pretty sure the existing rendering code would still work fine with the alternate rendering type. Attempting to update the rendering code now. [12/30/25 8:47AM]
+-> That was significantly easier than expected. [12/30/25 8:57AM]

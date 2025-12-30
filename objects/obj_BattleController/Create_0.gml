@@ -45,7 +45,6 @@ global.BattleState = BATTLESTATE.LOAD;
 global.BattleController = -1;
 
 character_animations_complete = ds_list_create(); // the things I do for this one specific feature that all it does is make one animation look nice
-timer = 0;
 //show_debug_message(CharaData_From_CharaID(party_array[0]));
 
 #region Render Puppet
@@ -143,7 +142,7 @@ surface_mainmenu = -1;
 surface_mainmenu_draw = new Vector2(0, 490);
 
 // Draw position for the background
-mainmenu_background_draw = new Vector2(320, 142);
+//mainmenu_background_draw = new Vector2(320, 142);
 
 // Y positions for closed and open tabs
 mainmenu_charapanel_closed_y = 85; 
@@ -152,10 +151,15 @@ mainmenu_charapanel_open_y   = 51;
 // Thickness of panel outline
 mainmenu_charapanel_outlinethickness = 2;
 
-// Positions for action icons
-mainmenu_charapanel_actionicon_x = 0;
+// Positions for action icons [Removed in favor of using bounding box allignments]
+//mainmenu_charapanel_actionicon_x = 0;
 
-// X positions for closed character tabs
+// Variables for that one background box fading effect on the selected character
+// [x offset from anchor, opacity]. Actually just use vector2 for this
+mainmenu_background_drawboxeseffect = ds_list_create();
+
+// X positions for closed character tabs.
+// This should be refactored to be set by the battle start script
 if(global.LargePartyMode)
 {
 	// Not Implemented
@@ -168,27 +172,13 @@ else
 // Who is currently selecting their action
 chara_currently_selecting_action = 0;
 
-// Who is currently selecting their action
+// What action is currently selected
 currently_hovered_action = ACTION.ATTACK;
 
 action_button_padding = new Vector2(5, 3);
 
 // Sprites
-mainmenu_spr_background = spr_BattleRoom_MainMenu_Background;
-
-mainmenu_spr_actionicon_attack = spr_BattleRoom_ActionButtonIcon_Attack;
-mainmenu_spr_actionicon_act    = spr_BattleRoom_ActionButtonIcon_Act;
-mainmenu_spr_actionicon_magic  = spr_BattleRoom_ActionButtonIcon_Magic;
-mainmenu_spr_actionicon_item   = spr_BattleRoom_ActionButtonIcon_Item;
-mainmenu_spr_actionicon_spare  = spr_BattleRoom_ActionButtonIcon_Spare;
-mainmenu_spr_actionicon_defend = spr_BattleRoom_ActionButtonIcon_Defend;
-
-mainmenu_spr_actionicon_attack_selected  = spr_BattleRoom_ActionButtonIcon_AttackSelected;
-mainmenu_spr_actionicon_act_selected     = spr_BattleRoom_ActionButtonIcon_ActSelected;
-mainmenu_spr_actionicon_magic_selected   = spr_BattleRoom_ActionButtonIcon_MagicSelected;
-mainmenu_spr_actionicon_item_selected    = spr_BattleRoom_ActionButtonIcon_ItemSelected;
-mainmenu_spr_actionicon_spare_selected   = spr_BattleRoom_ActionButtonIcon_SpareSelected;
-mainmenu_spr_actionicon_defend_selected  = spr_BattleRoom_ActionButtonIcon_DefendSelected;
+//mainmenu_spr_background = spr_BattleRoom_MainMenu_Background;
 
 // Colors
 mainmenu_col_linework   = $332033;

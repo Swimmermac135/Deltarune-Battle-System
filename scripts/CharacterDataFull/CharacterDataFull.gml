@@ -2,7 +2,7 @@ function CharacterDataFull(_CharaID, _RenderPuppet) constructor{
 	
 	CharaID         = _CharaID;
 	RenderPuppet    = _RenderPuppet;
-	CharaData       = CharaData_From_CharaID(_CharaID);
+	CharaData       = variable_clone(CharaData_From_CharaID(_CharaID));
 	CharaCombatData = 0;
 	
 	// Set to true if rendering will be controlled elsewhere for the renderpuppet (cutscene)
