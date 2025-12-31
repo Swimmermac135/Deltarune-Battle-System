@@ -177,6 +177,15 @@ currently_hovered_action = ACTION.ATTACK;
 
 action_button_padding = new Vector2(5, 3);
 
+// HP bar offsets
+HP_number_offset    = new Vector2(48, -6);
+maxHP_number_offset = new Vector2(93, -6);
+HP_number_padding   = new Vector2(2, 0);
+
+chara_healthbar_bgcol    = #7F080C;
+chara_healthbar_topleft  = new Vector2(21, 2);
+chara_healthbar_btmright = new Vector2(96, 10);
+
 // Sprites
 //mainmenu_spr_background = spr_BattleRoom_MainMenu_Background;
 

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"CharaData_From_CharaID",
+  "%Name":"AnimationData_From_CharaID",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"CharaData_From_CharaID",
+  "name":"AnimationData_From_CharaID",
   "parent":{
     "name":"Scripts",
     "path":"folders/[3] Battle System/Scripts.yy",

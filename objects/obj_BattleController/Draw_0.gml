@@ -121,7 +121,8 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
     
 	if(global.PartyArray[| i].CharaID != CHARACTERS.None)
 	{
-		var _currentEntry = global.PartyArray[| i].CharaData;
+		var _currentEntry      = global.PartyArray[| i].CharaData;
+		var _currentEntryCmbt  = global.PartyArray[| i].CombatData;
 		var _charaPanelAnchorX = mainmenu_charapanels_draw[i].x;
 		var _charaPanelAnchorY = global.PartyArray[| i].CharaData.characterPanelCurrentDrawY;
 		var _ActionIconOffset  = (sprite_get_width(spr_BattleRoom_ActionButtonIcon_Item) + action_button_padding.x);
@@ -222,6 +223,35 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 		
 		draw_sprite(_currentEntry.characterPanel, 0, _charaPanelAnchorX, _charaPanelAnchorY);
 		draw_sprite(_currentEntry.characterIcon,  0, _charaPanelAnchorX + _currentEntry.characterIconPortraitOffset.x, _charaPanelAnchorY +_currentEntry.characterIconPortraitOffset.y); // Needs to account for character injured later
+		
+		// Character HP and healthbar
+		
+		var _HPArray    = ConvertHPToSpriteArray(_currentEntryCmbt.HP);
+		var _maxHPArray = ConvertHPToSpriteArray(_currentEntryCmbt.maxHP);
+		var _drawColor  = c_white;
+		
+		if(_currentEntryCmbt.HP <= 0)
+			_drawColor = c_red;
+		
+		// Read the array backwards since it is from right to left so that any number theoretically could work, even though it should probably never go above 999
+		for (var j = array_length(_HPArray) - 1; j >= 0; j--) 
+		{
+		    draw_sprite_ext(_HPArray[j], 0, (_charaPanelAnchorX + HP_number_offset.x) - ((HP_number_padding.x + sprite_get_width(spr_HPNumber_Empty))*(array_length(_HPArray) - j - 1)), _charaPanelAnchorY + HP_number_offset.y, 1, 1, 0, _drawColor, 1);
+		}
+		
+        // Same thing but for maxHP
+		for (var j = array_length(_maxHPArray) - 1; j >= 0; j--) 
+		{
+		    draw_sprite_ext(_maxHPArray[j], 0, (_charaPanelAnchorX + maxHP_number_offset.x) - ((HP_number_padding.x + sprite_get_width(spr_HPNumber_Empty))*(array_length(_maxHPArray) - j - 1)), _charaPanelAnchorY + maxHP_number_offset.y,  1, 1, 0, _drawColor, 1);
+		}
+		
+		// Draw Healthbar
+		var _healthPercent = 0;
+		
+		if(_currentEntryCmbt.HP > 0)
+			_healthPercent = (_currentEntryCmbt.HP / _currentEntryCmbt.maxHP) * 100;
+		
+		draw_healthbar(_charaPanelAnchorX + chara_healthbar_topleft.x, _charaPanelAnchorY + chara_healthbar_topleft.y, _charaPanelAnchorX + chara_healthbar_btmright.x, _charaPanelAnchorY + chara_healthbar_btmright.y, _healthPercent, chara_healthbar_bgcol, _currentEntry.characterPanelExtColor, _currentEntry.characterPanelExtColor, 0, true, false);
 		
 		// If this character is currently the one selecting their action
 		if(i == chara_currently_selecting_action)

@@ -199,6 +199,59 @@ ds_map_add(global.CharacterRefMap, CHARACTERS.None, characterData_None);
 
 #endregion
 
+#region Load Combat Data? 
+
+// I don't know if I will keep it like this, but being able to set combatdata independant of 
+characterCombatData_Kris = {
+		
+	HP     : 90,
+	maxHP  : 90,
+	
+	weapon     : 0,
+	equipment1 : 0,
+	equipment2 : 0
+}
+
+ds_map_add(global.CharacterCombatRefMap, CHARACTERS.Kris, characterCombatData_Kris);
+
+characterCombatData_Susie = {
+		
+	HP     : 110,
+	maxHP  : 110,
+	
+	weapon     : 0,
+	equipment1 : 0,
+	equipment2 : 0
+}
+
+ds_map_add(global.CharacterCombatRefMap, CHARACTERS.Susie, characterCombatData_Susie);
+
+characterCombatData_Ralsei = {
+		
+	HP     : 70,
+	maxHP  : 70,
+	
+	weapon     : 0,
+	equipment1 : 0,
+	equipment2 : 0
+}
+
+ds_map_add(global.CharacterCombatRefMap, CHARACTERS.Ralsei, characterCombatData_Ralsei);
+
+characterCombatData_None = {
+		
+	HP     : 00,
+	maxHP  : 01,
+	
+	weapon     : 0,
+	equipment1 : 0,
+	equipment2 : 0
+}
+
+ds_map_add(global.CharacterCombatRefMap, CHARACTERS.None, characterCombatData_None);
+
+#endregion
+
 #region Battle Related
 
 global.PartyArrayIndexes = [CHARACTERS.Kris, CHARACTERS.Susie, CHARACTERS.Ralsei];
