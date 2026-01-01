@@ -1,4 +1,4 @@
-if(image_index >= image_number - 1)
+if(floor(image_index) >= image_number - 1)
 {
 	if(play_once)
 	{
@@ -10,3 +10,5 @@ if(image_index >= image_number - 1)
 		}
 	}
 }
+
+currently_playing = sprite_index;

@@ -2,10 +2,6 @@ if(global.BattleController == -1) //Might remove this later
 	global.BattleController = self;
 
 if(keyboard_check_pressed(vk_numpad9)) {game_restart();}
-if(keyboard_check_pressed(vk_numpad8)) {TPMeterSlideIn();}
-if(keyboard_check_pressed(vk_numpad7)) {TPMeterSlideOut();}
-if(keyboard_check_pressed(vk_numpad6)) {MainMenuSlideIn();}
-if(keyboard_check_pressed(vk_numpad5)) {MainMenuSlideOut();}
 
 if(keyboard_check_pressed(vk_numpad4) && chara_currently_selecting_action < ds_list_size(global.PartyArray)-1) {chara_currently_selecting_action++; currently_hovered_action = ACTION.ATTACK;}
 if(keyboard_check_pressed(vk_numpad3) && chara_currently_selecting_action > 0) {chara_currently_selecting_action--; currently_hovered_action = ACTION.ATTACK;}
@@ -30,6 +26,18 @@ if(global.BattleState == BATTLESTATE.LOAD)
 		
 	}
 	chara_renderpuppet_setup_complete = true;
+	
+	// ENEMIES
+	// Create each enemy obj
+	for (var i = 0; i < array_length(global.EnemyArrayIndexes); i++) {
+		
+		var _inst = instance_create_depth(enemy_renderpuppet_preset_locations[i].x, enemy_renderpuppet_preset_locations[i].y, i, ds_map_find_value(global.EnemyMap, global.EnemyArrayIndexes[i]));
+		ds_list_add(global.EnemyArray, _inst);
+		
+		ShowDebugMessageExt("BATTLESYSTEM ENEMY CREATOR", $"Created Enemy OBJ {i}: {_inst.displayName}");
+	}
+	
+	enemy_setup_complete = true;
 }
 #endregion
 
@@ -37,7 +45,7 @@ if(global.BattleState == BATTLESTATE.LOAD)
 
 // I don't know why this is in a seperate region but whatever
 
-if(global.BattleState == BATTLESTATE.LOAD && enemy_renderpuppet_setup_complete && chara_renderpuppet_setup_complete)
+if(global.BattleState == BATTLESTATE.LOAD && enemy_setup_complete && chara_renderpuppet_setup_complete)
 {
 	if(global.BattleSkipIntro)
 	{
@@ -62,8 +70,8 @@ if(global.BattleState == BATTLESTATE.CHARACTERINTRO)
 	{
 		var _currentEntry = global.PartyArray[| i];
 		
-		if(_currentEntry.RenderPuppet.currently_playing != _currentEntry.CharaData.characterAnimationIntro)
-			RenderPuppetPlayAnimation(_currentEntry.RenderPuppet, _currentEntry.CharaData.characterAnimationIntro, 1, true);
+		if(_currentEntry.RenderPuppet.currently_playing != _currentEntry.CharaData.characterAnimationIntro[0])
+			RenderPuppetPlayAnimation(_currentEntry.RenderPuppet, _currentEntry.CharaData.characterAnimationIntro[0], _currentEntry.CharaData.characterAnimationIntro[1], true);
 		//show_debug_message($"{_currentEntry.RenderPuppet.image_index} {_currentEntry.RenderPuppet.image_number}")	
 		
 		// Freeze animation if it's done
@@ -89,12 +97,14 @@ if(global.BattleState == BATTLESTATE.BATTLESTART)
 {
 	
 	for (var i = 0; i < ds_list_size(global.PartyArray); i++) {
-		var _currentEntry = global.PartyArray[| i];
+		if(global.PartyArray[| i].CharaID != CHARACTERS.None)
+		{
+			var _currentEntry = global.PartyArray[| i];
 		
-		if(_currentEntry.RenderPuppet.currently_playing != _currentEntry.CharaData.characterAnimationIdle)
-			RenderPuppetPlayAnimation(_currentEntry.RenderPuppet, _currentEntry.CharaData.characterAnimationIdle);
+			if(_currentEntry.RenderPuppet.currently_playing != _currentEntry.CharaData.characterAnimationIdle[0])
+				RenderPuppetPlayAnimation(_currentEntry.RenderPuppet, _currentEntry.CharaData.characterAnimationIdle[0], _currentEntry.CharaData.characterAnimationIdle[1]);
+		}
 	}
-	
 	if(global.MyFight)
 	{
 		// Main menu and TP meter fade in
@@ -107,6 +117,32 @@ if(global.BattleState == BATTLESTATE.BATTLESTART)
 	
 	global.BattleState = BATTLESTATE.PLAYERSELECTING;
 	ShowDebugMessageExt("BATTLESYSTEM", "Battle START Phase Complete. Proceeding to PLAYER TURN");
+}
+
+if(global.BattleState == BATTLESTATE.PLAYERSELECTING)
+{
+	// If the current character isnt real, skip to the next one
+	if(ds_list_size(global.PartyArray) > chara_currently_selecting_action)
+	{
+		if(global.PartyArray[| chara_currently_selecting_action].CharaID == CHARACTERS.None)
+			SelectNextCharacter();	
+	}
+	
+	
+	var _totalSelected = 0;
+	for (var _whoToCheck = 0; _whoToCheck < ds_list_size(global.PartyArray); _whoToCheck++) {
+	    if(global.PartyArray[| _whoToCheck].CharaID != CHARACTERS.None)
+			if(global.PartyArray[| _whoToCheck].whatAmIDoingThisTurn != ACTION.UNDECIDED)
+				_totalSelected++;
+	}
+	
+	if(chara_currently_selecting_action >= ds_list_size(global.PartyArray))
+	{
+		global.BattleState = BATTLESTATE.PLAYERTOENEMYTRANSITION;
+		ShowDebugMessageExt("BATTLESYSTEM", "PLAYER SELECT Phase Complete. Proceeding to PLAYER -> ENEMY TRANSITION");
+	}
+	
+
 }
 
 #endregion
@@ -219,64 +255,157 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 #region Action Selection
 
 // In hindsight just having a number instead of an ENUM would have worked for this
-if(BATTLESTATE.PLAYERSELECTING)
+if(global.BattleState == BATTLESTATE.PLAYERSELECTING)
 {
-	if(InputPressed(INPUT_VERB.RIGHT))
+	if(main_menu_phase == MAINMENUSTATE.SELECTINGATTACKTARGET && menu_swap_delay == 0)
 	{
-		switch (currently_hovered_action)
+		
+		// Go up in selector list if up is pressed and not at top of list
+		if(InputPressed(INPUT_VERB.UP) &&  global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget > 0)
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget--;
+			
+		// hover next in list if there is a next in list to hover
+		if(InputPressed(INPUT_VERB.DOWN) && global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget < ds_list_size(global.EnemyArray) - 1)
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget++;
+			
+		if(InputPressed(INPUT_VERB.ACCEPT) && global.EnemyArray[| global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget].can_be_attacked)
 		{
-			case ACTION.DEFEND:
-				currently_hovered_action = ACTION.ATTACK;
-			break;
-			
-			case ACTION.ATTACK:
-				currently_hovered_action = ACTION.MAGICORACT;
-			break;
-			
-			case ACTION.MAGICORACT:
-				currently_hovered_action = ACTION.ITEM;
-			break;
-			
-			case ACTION.ITEM:
-				currently_hovered_action = ACTION.SPARE;
-			break;
-			
-			case ACTION.SPARE:
-				currently_hovered_action = ACTION.DEFEND;
-			break;	
+			ConfirmAttack();
+			audio_play_sound(snd_UTDRSelect,1,0);
 		}
-		audio_play_sound(snd_UTDRSqueak,1,0);
+		
+		if(InputPressed(INPUT_VERB.CANCEL))
+		{
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget = 0;
+			main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
+		}
 	}
 	
-	if(InputPressed(INPUT_VERB.LEFT))
+	if(main_menu_phase == MAINMENUSTATE.SELECTINGMAINACTION && menu_swap_delay == 0)
 	{
-		switch (currently_hovered_action)
+		if(InputPressed(INPUT_VERB.RIGHT))
 		{
-			case ACTION.DEFEND:
-				currently_hovered_action = ACTION.SPARE;
-			break;
+			switch (currently_hovered_action)
+			{
+				case ACTION.DEFEND:
+					currently_hovered_action = ACTION.ATTACK;
+				break;
 			
-			case ACTION.SPARE:
-				currently_hovered_action = ACTION.ITEM;
-			break;
+				case ACTION.ATTACK:
+					currently_hovered_action = ACTION.MAGICORACT;
+				break;
 			
-			case ACTION.ITEM:
-				currently_hovered_action = ACTION.MAGICORACT;
-			break;
+				case ACTION.MAGICORACT:
+					currently_hovered_action = ACTION.ITEM;
+				break;
 			
-			case ACTION.MAGICORACT:
-				currently_hovered_action = ACTION.ATTACK;
-			break;
+				case ACTION.ITEM:
+					currently_hovered_action = ACTION.SPARE;
+				break;
 			
-			case ACTION.ATTACK:
-				currently_hovered_action = ACTION.DEFEND;
-			break;
-		
+				case ACTION.SPARE:
+					currently_hovered_action = ACTION.DEFEND;
+				break;	
+			}
+			audio_play_sound(snd_UTDRSqueak,1,0);
 		}
-		audio_play_sound(snd_UTDRSqueak,1,0);
+	
+		if(InputPressed(INPUT_VERB.LEFT))
+		{
+			switch (currently_hovered_action)
+			{
+				case ACTION.DEFEND:
+					currently_hovered_action = ACTION.SPARE;
+				break;
+			
+				case ACTION.SPARE:
+					currently_hovered_action = ACTION.ITEM;
+				break;
+			
+				case ACTION.ITEM:
+					currently_hovered_action = ACTION.MAGICORACT;
+				break;
+			
+				case ACTION.MAGICORACT:
+					currently_hovered_action = ACTION.ATTACK;
+				break;
+			
+				case ACTION.ATTACK:
+					currently_hovered_action = ACTION.DEFEND;
+				break;
+		
+			}
+			audio_play_sound(snd_UTDRSqueak,1,0);
+		}
+	
+		if(InputPressed(INPUT_VERB.ACCEPT))
+		{
+			switch (currently_hovered_action)
+			{
+				case ACTION.DEFEND:
+					Defend();
+				break;
+			
+				case ACTION.SPARE:
+					//currently_hovered_action = ACTION.ITEM;
+				break;
+			
+				case ACTION.ITEM:
+					//currently_hovered_action = ACTION.MAGICORACT;
+				break;
+			
+				case ACTION.MAGICORACT:
+					//currently_hovered_action = ACTION.ATTACK;
+				break;
+			
+				case ACTION.ATTACK:
+					SelectAttackTarget()
+				break;
+			}
+			audio_play_sound(snd_UTDRSelect,1,0);
+		}
+	
+		if(InputPressed(INPUT_VERB.CANCEL))
+		{
+			if(chara_currently_selecting_action > 0)
+			{
+			
+				SelectPrevCharacter();
+			
+				var _whatWasIDoing = global.PartyArray[| chara_currently_selecting_action].whatAmIDoingThisTurn;
+				currently_hovered_action = _whatWasIDoing;
+		
+				switch (_whatWasIDoing)
+				{
+					case ACTION.DEFEND:
+						UndoDefend();
+					break;
+			
+					case ACTION.SPARE:
+						//currently_hovered_action = ACTION.ITEM;
+					break;
+			
+					case ACTION.ITEM:
+						//currently_hovered_action = ACTION.MAGICORACT;
+					break;
+			
+					case ACTION.MAGICORACT:
+						//currently_hovered_action = ACTION.ATTACK;
+					break;
+			
+					case ACTION.ATTACK:
+						UndoAttack();
+					break;
+				}
+			}
+			audio_play_sound(snd_UTDRSelect,1,0);
+		}
 	}
-
+	
 }
+
+if(menu_swap_delay > 0)
+	menu_swap_delay--;
 
 #endregion
 

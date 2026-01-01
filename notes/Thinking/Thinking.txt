@@ -1,0 +1,28 @@
+How do I store what action correlates to what actually happens?
+
+For ACTIONS (Attack, spare, etc), I could most likely tie a script to each button that runs the next step in the code.
+(Opening the selector button for ITEM, enemy select for ACT/SPARE/MAGIC/ETC)
+
+ACTs will probably have a struct with their name, TP cost, and a run script as well as a conditions check script that would dictate wether or not the act is valid
+
+Example:
+ACT_pacify = {
+
+	name : "Pacify",
+	cost : 16,
+	executionScript  : scr_pacifyExecute,
+	validationScript : scr_pacifyValidate,
+	
+}
+
+where executionScript is called when the turn actually begins (after PLAYERSELECTING phase is complete) and validationScript is called whenever the player tries
+to select the act for usage (as well as the system renders it to see if it renders gray for invalid or normal for valid [or a different color for special])
+
+So selecting ACTION.ACT would run the ACTION.ACT script which would open the enemy selection screen. Perhaps there should be a flag for single fights that skips the selector screen.
+
+-----------------------------------------------------
+
+For some reason, Enemies have all of their render data stored within the object. Well, I say for some reason but I know why, I wrote the system lol
+Enemies have their own render code because I want it to be easier than the rendering system for characters. It is the same reason why all combat logic is stored in one object
+Having to have the different aspects of the combat system crosstalk would be annoying, so having it centralized is better here
+For enemies, who are simpler in design (characters have a lot more animations, menu code, etc), I think having them be in self contained objects is okay. 

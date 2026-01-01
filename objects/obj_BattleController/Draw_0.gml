@@ -115,7 +115,113 @@ draw_line_width(0, mainmenu_charapanel_closed_y + (sprite_get_height(spr_BattleR
 draw_line_width(0, mainmenu_charapanel_closed_y - (sprite_get_height(spr_BattleRoom_CharaPanel_Template) / 2), room_width, mainmenu_charapanel_closed_y - (sprite_get_height(spr_BattleRoom_CharaPanel_Template) / 2), 3);
 draw_set_colour(c_white);
 
+// The main menu sub menus
 
+switch(main_menu_phase)
+{
+	case MAINMENUSTATE.SELECTINGMAINACTION:
+		// Keep the typewriter visible i think idk i just need this here for now
+	break;
+	
+	case MAINMENUSTATE.SELECTINGATTACKTARGET:
+		
+		var _currentPage = floor(global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget / 3) - 1;
+		
+		if(_currentPage < 0)
+			_currentPage = 0;
+		
+		var _numChoicesOnPage = ds_list_size(global.EnemyArray) - (_currentPage * 3);
+		var _selectedSlot     =  global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget - (_currentPage * 3);
+		
+		draw_sprite_ext(spr_BattleRoom_Mercy, 0, 560, 113, 0.5, 0.3, 0, c_white, 1);
+		draw_sprite_ext(spr_BattleRoom_HP, 0, 430, 113, 0.5, 0.3, 0, c_white, 1);
+		
+		// Render enemy names
+		if(_numChoicesOnPage >= 1)
+		{
+			if(_selectedSlot == 0)
+				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[0].x - 20, mainmenu_selectortext_position[0].y + 15);
+			
+			var _currentEnemy = global.EnemyArray[| _currentPage*3];
+			
+			// Draw Name
+			scribble(_currentEnemy.displayName).scale(.5).draw(mainmenu_selectortext_position[0].x, mainmenu_selectortext_position[0].y);
+			
+			// Draw Healthbar
+			draw_healthbar(410, mainmenu_selectortext_position[0].y + 21, 495, mainmenu_selectortext_position[0].y + 5, (_currentEnemy.HP / _currentEnemy.max_HP) * 100, _currentEnemy.health_color.y, _currentEnemy.health_color.x, _currentEnemy.health_color.x, 0, true, false);
+			
+			if(_currentEnemy.health_percent_unknown)
+				scribble("???").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[0].y + 5);
+			else
+				scribble($"{round((_currentEnemy.HP / _currentEnemy.max_HP) * 100)}%").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[0].y + 5);
+				
+			// Draw Mercymeter 
+			draw_healthbar(518, mainmenu_selectortext_position[0].y + 21, 603, mainmenu_selectortext_position[0].y + 5,_currentEnemy.spare_percent, _currentEnemy.mercy_color.y, _currentEnemy.mercy_color.x, _currentEnemy.mercy_color.x, 0, true, false);
+			//scribble(_currentEnemy.displayName).scale(.4).draw(415, mainmenu_selectortext_position[0].y);
+			if(_currentEnemy.can_be_spared)
+				scribble($"{_currentEnemy.spare_percent}%").transform(.4, .25, 0).flash(_currentEnemy.mercy_text_color, 1).draw(523, mainmenu_selectortext_position[0].y + 5);
+			
+			
+		}
+		
+		if(_numChoicesOnPage >= 2)
+		{
+			if(_selectedSlot == 1)
+				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[1].x - 20, mainmenu_selectortext_position[1].y + 15);
+			
+			var _currentEnemy = global.EnemyArray[| _currentPage*3 + 1];
+			
+			// Draw Name
+			scribble(_currentEnemy.displayName).scale(.5).draw(mainmenu_selectortext_position[1].x, mainmenu_selectortext_position[1].y);
+			
+			// Draw Healthbar
+			draw_healthbar(410, mainmenu_selectortext_position[1].y + 21, 495, mainmenu_selectortext_position[1].y + 5, (_currentEnemy.HP / _currentEnemy.max_HP) * 100, _currentEnemy.health_color.y, _currentEnemy.health_color.x, _currentEnemy.health_color.x, 0, true, false);
+			
+			if(_currentEnemy.health_percent_unknown)
+				scribble("???").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[1].y + 5);
+			else
+				scribble($"{round((_currentEnemy.HP / _currentEnemy.max_HP) * 100)}%").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[1].y + 5);
+				
+			// Draw Mercymeter 
+			draw_healthbar(518, mainmenu_selectortext_position[1].y + 21, 603, mainmenu_selectortext_position[1].y + 5,_currentEnemy.spare_percent, _currentEnemy.mercy_color.y, _currentEnemy.mercy_color.x, _currentEnemy.mercy_color.x, 0, true, false);
+
+			if(_currentEnemy.can_be_spared)
+				scribble($"{_currentEnemy.spare_percent}%").transform(.4, .25, 0).flash(_currentEnemy.mercy_text_color, 1).draw(523, mainmenu_selectortext_position[1].y + 5);
+			
+		}
+		
+		if(_numChoicesOnPage >= 3)
+		{
+			if(_selectedSlot == 2)
+				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[2].x - 20, mainmenu_selectortext_position[2].y + 15);
+			
+			var _currentEnemy = global.EnemyArray[| _currentPage*3 + 2];
+			
+			// Draw Name
+			scribble(_currentEnemy.displayName).scale(.5).draw(mainmenu_selectortext_position[2].x, mainmenu_selectortext_position[2].y);
+			
+			// Draw Healthbar
+			draw_healthbar(410, mainmenu_selectortext_position[2].y + 21, 495, mainmenu_selectortext_position[2].y + 5, (_currentEnemy.HP / _currentEnemy.max_HP) * 100, _currentEnemy.health_color.y, _currentEnemy.health_color.x, _currentEnemy.health_color.x, 0, true, false);
+			
+			if(_currentEnemy.health_percent_unknown)
+				scribble("???").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[2].y + 5);
+			else
+				scribble($"{round((_currentEnemy.HP / _currentEnemy.max_HP) * 100)}%").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[2].y + 5);
+				
+			// Draw Mercymeter 
+			draw_healthbar(518, mainmenu_selectortext_position[2].y + 21, 603, mainmenu_selectortext_position[2].y + 5,_currentEnemy.spare_percent, _currentEnemy.mercy_color.y, _currentEnemy.mercy_color.x, _currentEnemy.mercy_color.x, 0, true, false);
+
+			if(_currentEnemy.can_be_spared)
+				scribble($"{_currentEnemy.spare_percent}%").transform(.4, .25, 0).flash(_currentEnemy.mercy_text_color, 1).draw(523, mainmenu_selectortext_position[2].y + 5);
+		}
+		
+	break;
+	
+	
+}
+
+
+#region Character Panels
 // Draw the character panels
 for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
     
@@ -173,7 +279,6 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 			else
 				draw_sprite(_currentEntry.characterActionIconAttack[0], 0, _charaPanelAnchorX - _ActionIconOffset * 2, mainmenu_charapanel_closed_y + action_button_padding.y);
 			
-
 			if(_currentEntry.characterUsesAct)
 			{
 				if(currently_hovered_action == ACTION.MAGICORACT)
@@ -222,7 +327,7 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 		}
 		
 		draw_sprite(_currentEntry.characterPanel, 0, _charaPanelAnchorX, _charaPanelAnchorY);
-		draw_sprite(_currentEntry.characterIcon,  0, _charaPanelAnchorX + _currentEntry.characterIconPortraitOffset.x, _charaPanelAnchorY +_currentEntry.characterIconPortraitOffset.y); // Needs to account for character injured later
+		draw_sprite(_currentEntry.characterIconCurrentRender,  0, _charaPanelAnchorX + _currentEntry.characterIconPortraitOffset.x, _charaPanelAnchorY +_currentEntry.characterIconPortraitOffset.y); // Needs to account for character injured later
 		
 		// Character HP and healthbar
 		
@@ -290,6 +395,7 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 		
 	}
 }
+#endregion
 
 // Reset draw target
 surface_reset_target();

@@ -23,7 +23,7 @@ ds_list_add(global.AvailableCombatEncounters, encounter_FreddyFazCrew);
 	time_spent_holding_escape = 0;
 #endregion
 
-#region Load Character Data
+#region Load Animation Data
 
 global.CharacterRefMap = ds_map_create();
 global.CharacterCombatRefMap = ds_map_create();
@@ -47,8 +47,12 @@ characterData_Kris =
 	
 	characterPanel             : spr_BattleRoom_CharaPanel_Kris,
 	characterPanelExtColor     : #00FFFF,
-	characterPanelState        : CHARAPANELSTATE.CLOSED,
+	
+	// This character panel stuff should probably be moved into fulldata later
+	characterPanelState        : CHARAPANELSTATE.CLOSED, 
 	characterPanelCurrentDrawY : 85,
+	
+	characterIconCurrentRender  : spr_BattleRoom_CharaPanelIcon_Kris,
 	
 	characterIcon		        : spr_BattleRoom_CharaPanelIcon_Kris,
 	characterIconInjured        : spr_BattleRoom_CharaPanelIcon_KrisInjured,
@@ -72,8 +76,11 @@ characterData_Kris =
 	characterIconSelectHeal : spr_BattleRoom_CharaPanelIcon_KrisSelectForHeal,
 	
 	// Need to add: all animations, idle sprite, etc
-	characterAnimationIdle  : spr_BattleRoom_CharaAnimation_KrisIdle,
-	characterAnimationIntro : spr_BattleRoom_CharaAnimation_KrisAttack,
+	characterAnimationIdle        : [spr_BattleRoom_CharaAnimation_KrisIdle , 0.16],
+	characterAnimationIntro       : [spr_BattleRoom_CharaAnimation_KrisAttack, 0.5],
+	characterAnimationDefend      : [spr_BattleRoom_CharaAnimation_KrisDefend, 0.5],
+	characterAnimationAttack      : [spr_BattleRoom_CharaAnimation_KrisAttack, 0.5],
+	characterAnimationReadyAttack : [spr_BattleRoom_CharaAnimation_KrisReadyAttack, 1],
 	
 }
 
@@ -90,6 +97,8 @@ characterData_Susie =
 	characterPanelExtColor     : #FF00FF,
 	characterPanelState        : CHARAPANELSTATE.CLOSED,
 	characterPanelCurrentDrawY : 85,
+	
+	characterIconCurrentRender  : spr_BattleRoom_CharaPanelIcon_Susie,
 	
 	characterIcon		        : spr_BattleRoom_CharaPanelIcon_Susie,
 	characterIconInjured        : spr_BattleRoom_CharaPanelIcon_SusieInjured,
@@ -112,8 +121,11 @@ characterData_Susie =
 	characterIconSleep      : spr_BattleRoom_CharaPanelIcon_SusieSleep,
 	characterIconSelectHeal : spr_BattleRoom_CharaPanelIcon_SusieSelectForHeal,
 	
-	characterAnimationIdle  : spr_BattleRoom_CharaAnimation_SusieIdle,
-	characterAnimationIntro : spr_BattleRoom_CharaAnimation_SusieIntro,
+	characterAnimationIdle        : [spr_BattleRoom_CharaAnimation_SusieIdle,  0.16],
+	characterAnimationIntro       : [spr_BattleRoom_CharaAnimation_SusieIntro, 0.4], // Fixing a certain (bug/behavior?) with the original game's code caused susie to get stuck in a smear frame for an unconfortably long time
+	characterAnimationDefend      : [spr_BattleRoom_CharaAnimation_SusieDefend, 0.5],
+	characterAnimationAttack      : [spr_BattleRoom_CharaAnimation_SusieAttack, 0.5],
+	characterAnimationReadyAttack : [spr_BattleRoom_CharaAnimation_SusieReadyAttack, 1],
 }
 
 ds_map_add(global.CharacterRefMap, CHARACTERS.Susie, characterData_Susie);
@@ -129,6 +141,8 @@ characterData_Ralsei =
 	characterPanelExtColor     : #00FF00,
 	characterPanelState        : CHARAPANELSTATE.CLOSED,
 	characterPanelCurrentDrawY : 85,
+	
+	characterIconCurrentRender  : spr_BattleRoom_CharaPanelIcon_Ralsei,
 	
 	characterIcon		        : spr_BattleRoom_CharaPanelIcon_Ralsei,
 	characterIconInjured        : spr_BattleRoom_CharaPanelIcon_RalseiInjured,
@@ -151,8 +165,11 @@ characterData_Ralsei =
 	characterIconSleep      : spr_BattleRoom_CharaPanelIcon_RalseiSleep,
 	characterIconSelectHeal : spr_BattleRoom_CharaPanelIcon_RalseiSelectForHeal,
 	
-	characterAnimationIdle  : spr_BattleRoom_CharaAnimation_RalseiIdle,
-	characterAnimationIntro : spr_BattleRoom_CharaAnimation_RalseiIntro,
+	characterAnimationIdle        : [spr_BattleRoom_CharaAnimation_RalseiIdle,  0.16],
+	characterAnimationIntro       : [spr_BattleRoom_CharaAnimation_RalseiIntro, 0.6],
+	characterAnimationDefend      : [spr_BattleRoom_CharaAnimation_RalseiDefend, 0.5],
+	characterAnimationAttack      : [spr_BattleRoom_CharaAnimation_RalseiAttack, 0.5],
+	characterAnimationReadyAttack : [spr_BattleRoom_CharaAnimation_RalseiReadyAttack, 1],
 }
 
 ds_map_add(global.CharacterRefMap, CHARACTERS.Ralsei, characterData_Ralsei);
@@ -170,6 +187,7 @@ characterData_None =
 	characterPanelState        : CHARAPANELSTATE.CLOSED,
 	characterPanelCurrentDrawY : 85,
 	
+	characterIconCurrentRender  : spr_none,
 	characterIcon		        : spr_none,
 	characterIconInjured        : spr_none,
 	characterIconPortraitOffset : new Vector2(),
@@ -191,8 +209,8 @@ characterData_None =
 	characterIconSleep      : spr_none,
 	characterIconSelectHeal : spr_none,
 	
-	characterAnimationIdle  : spr_none,
-	characterAnimationIntro : spr_none,
+	characterAnimationIdle  : [spr_none, 0],
+	characterAnimationIntro : [spr_none, 0],
 }
 
 ds_map_add(global.CharacterRefMap, CHARACTERS.None, characterData_None);
@@ -201,7 +219,7 @@ ds_map_add(global.CharacterRefMap, CHARACTERS.None, characterData_None);
 
 #region Load Combat Data? 
 
-// I don't know if I will keep it like this, but being able to set combatdata independant of 
+// I don't know if I will keep it like this, but being able to set combatdata independant of animdata could be useful
 characterCombatData_Kris = {
 		
 	HP     : 90,
@@ -252,15 +270,91 @@ ds_map_add(global.CharacterCombatRefMap, CHARACTERS.None, characterCombatData_No
 
 #endregion
 
+#region Enemy List
+
+// Map of enemies and their objects
+global.EnemyMap = ds_map_create();
+
+enum ENEMYID {
+	
+	None,
+	TestEnemy,
+	
+}
+
+ds_map_add(global.EnemyMap, ENEMYID.TestEnemy, obj_TestEnemy);
+
+#endregion
+
+#region Item List
+
+global.ItemMap = ds_map_create();
+
+enum ITEMTYPE {
+	
+	ARMOR,
+	WEAPON,
+	CONSUMABLE,
+	OTHER,
+	
+}
+
+enum ITEMID {
+	
+	None,
+	TestArmor,
+	TestConsumable,
+	
+}
+
+ItemData_testArmor = {
+	
+	name        : "MaxArmor",
+	description : "Raises defence to unholy levels or something",
+	type        : ITEMTYPE.ARMOR, // Armor, weapon, consumable, etc
+	
+	canBeEquippedOn : [CHARACTERS.None],
+	
+	validationScript : "",
+	
+}
+
+ds_map_add(global.ItemMap, ITEMID.TestArmor, ItemData_testArmor);
+
+ItemData_testConsumable = {
+	
+	name        : "SuperFood",
+	description : "Heals... Something",
+	type        : ITEMTYPE.CONSUMABLE, // Armor, weapon, consumable, etc
+	
+	canBeEquippedOn : [CHARACTERS.None],
+	
+	validationScript : "",
+	
+}
+
+ds_map_add(global.ItemMap, ITEMID.TestConsumable, ItemData_testConsumable);
+
+#endregion
+
+#region Inventory
+
+global.MainInventory = array_create(12, ITEMID.TestConsumable);
+
+#endregion
+
 #region Battle Related
 
-global.PartyArrayIndexes = [CHARACTERS.Kris, CHARACTERS.Susie, CHARACTERS.Ralsei];
+global.PartyArrayIndexes = [];
+global.PartyArray      = ds_list_create(); // This is clearly a DS list. Why is it called PartyArray? [because it used to be an array and changing it would be annoying]
 
 global.BattleSkipIntro = true;
-global.PartyArray = ds_list_create();
-global.LargePartyMode = false; // This will likely remain unused for a long time. If I decide to implement it, It will allow for 6v6 fights
-global.OffsetPartyDraw = false; // This is annoying but sometimes with two person parties it looks nice if the two are offset from the center instead of the side. Go look at the chapter 2 rouxls fight
+global.LargePartyMode  = false; // This will likely remain unused for a long time. If I decide to implement it, It will allow for 6v6 fights
+global.OffsetPartyDraw = true; // This is annoying but sometimes with two person parties it looks nice if the two are offset from the center instead of the side. Go look at the chapter 2 rouxls fight
 global.MyFight         = true; // This one will probably actually never be needed but it is better to have it than not. All it does is remove player choice for cutscene fights like susie vs lancer in ch1
+
+global.EnemyArrayIndexes = [];
+global.EnemyArray        = ds_list_create(); // yet again going with this silly system. Having the fulldata creation be done in the script would be easier
 
 #endregion
 

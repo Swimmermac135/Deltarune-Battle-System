@@ -1,0 +1,1 @@
+StartCombat([CHARACTERS.Kris, CHARACTERS.Susie, CHARACTERS.Ralsei], [ENEMYID.TestEnemy, ENEMYID.TestEnemy,ENEMYID.TestEnemy], false);

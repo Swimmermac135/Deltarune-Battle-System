@@ -2,6 +2,8 @@
 
 enum BATTLESTATE
 {
+	AWAIT, // Shouldnt be used normally, only used to wait for starting battles in the testing environment
+	
 	LOAD,           // Battle Setup (Creating the Render Puppet objs)
 	CHARACTERINTRO, // The little flourish at the beginning
 	BATTLESTART,	// Final setup and battle element load ins (menu and TP bar)
@@ -31,6 +33,7 @@ enum CHARAPANELSTATE
 
 enum ACTION
 {
+	UNDECIDED,
 	ATTACK,
 	MAGICORACT,
 	ITEM,
@@ -38,30 +41,43 @@ enum ACTION
 	DEFEND,
 }
 
+enum MAINMENUSTATE
+{
+	SELECTINGMAINACTION, // Player is selecting from main action list
+	SELECTINGATTACKTARGET,
+	SELECTINGACTTARGET,
+	SELECTINGMAGICTARGET,
+	SELECTINGITEM,
+	SELECTINGSPARETARGET,
+	SHOWINGTYPEWRITER,   // Basically if there is text being shown
+}
+
 #endregion
 
-global.BattleState = BATTLESTATE.LOAD;
+global.BattleState = BATTLESTATE.AWAIT;
 
 global.BattleController = -1;
-
-character_animations_complete = ds_list_create(); // the things I do for this one specific feature that all it does is make one animation look nice
-//show_debug_message(CharaData_From_CharaID(party_array[0]));
 
 #region Render Puppet
 
 if(global.LargePartyMode)
 {
 	// Not Implemented
-	chara_renderpuppet_preset_locations = []; 
-	enemy_renderpuppet_preset_locations = [];
+	chara_renderpuppet_preset_locations = [new Vector2(80, 125), new Vector2(40, 215), new Vector2(70, 315), new Vector2(80, 125), new Vector2(40, 215), new Vector2(70, 315)]; 
+	enemy_renderpuppet_preset_locations = [new Vector2(550, 65), new Vector2(550, 165), new Vector2(550, 265), new Vector2(550, 65), new Vector2(550, 165), new Vector2(550, 265)];
 }
-else
+else // This should adapt based on the amount of party members/enemies. If one, render in the middle. If two, use offset. etc
 {
-	chara_renderpuppet_preset_locations = [new Vector2(80, 45), new Vector2(40, 135), new Vector2(70, 225)];
+	chara_renderpuppet_preset_locations = [new Vector2(80, 125), new Vector2(40, 215), new Vector2(70, 315)];
 	enemy_renderpuppet_preset_locations = [new Vector2(550, 65), new Vector2(550, 165), new Vector2(550, 265)]
 }
 chara_renderpuppet_setup_complete = false;
-enemy_renderpuppet_setup_complete = true;
+enemy_setup_complete = false;
+
+
+
+// the things I do for this one specific feature that all it does is make one animation look nice
+character_animations_complete = ds_list_create(); 
 
 #endregion
 
@@ -135,7 +151,10 @@ tensionmeter_color_maxtextcol   = c_yellow;
 global.MainMenuSlideIn  = false;
 global.MainMenuSlideOut = false;
 
-// Set up variable for the TP meter to be drawn to
+// what is the menu currently doing
+main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
+
+// Set up variable for the main menu to be drawn to
 surface_mainmenu = -1;
 
 // Manipulate this to change the entire menu's position
@@ -165,7 +184,10 @@ if(global.LargePartyMode)
 	// Not Implemented
 }
 else if(array_length(global.PartyArrayIndexes) == 2 && global.OffsetPartyDraw) // This is stupid
+{
 	mainmenu_charapanels_draw = [new Vector2(210, mainmenu_charapanel_closed_y), new Vector2(430, mainmenu_charapanel_closed_y)];
+	show_debug_message("Loaded Offset Menu Coords")
+}
 else
 	mainmenu_charapanels_draw = [new Vector2(108, mainmenu_charapanel_closed_y), new Vector2(320, mainmenu_charapanel_closed_y), new Vector2(532, mainmenu_charapanel_closed_y)];
 
@@ -174,6 +196,13 @@ chara_currently_selecting_action = 0;
 
 // What action is currently selected
 currently_hovered_action = ACTION.ATTACK;
+
+// Artificial delay between menu transitions to stop multiselecting
+menu_swap_delay = 0
+
+// Enemy/ally name render position
+mainmenu_selectortext_position = [new Vector2(65, 115), new Vector2(65, 145), new Vector2(65, 175)];
+current_selector_icon          = spr_BattleRoom_RedSoul;
 
 action_button_padding = new Vector2(5, 3);
 
