@@ -182,6 +182,7 @@ mainmenu_background_drawboxeseffect = ds_list_create();
 if(global.LargePartyMode)
 {
 	// Not Implemented
+	mainmenu_charapanels_draw = [new Vector2(108, mainmenu_charapanel_closed_y), new Vector2(320, mainmenu_charapanel_closed_y), new Vector2(532, mainmenu_charapanel_closed_y)];
 }
 else if(array_length(global.PartyArrayIndexes) == 2 && global.OffsetPartyDraw) // This is stupid
 {
@@ -214,6 +215,10 @@ HP_number_padding   = new Vector2(2, 0);
 chara_healthbar_bgcol    = #7F080C;
 chara_healthbar_topleft  = new Vector2(21, 2);
 chara_healthbar_btmright = new Vector2(96, 10);
+
+// Item readout padding test
+item_readout_px = new Vector2(210, 20);
+item_readout_padding = 10;
 
 // Sprites
 //mainmenu_spr_background = spr_BattleRoom_MainMenu_Background;

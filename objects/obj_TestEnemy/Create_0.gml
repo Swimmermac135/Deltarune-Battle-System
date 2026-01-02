@@ -10,6 +10,9 @@ displayName = "Blue Box";
 
 checkDialog  = "Actually, it seems quite purple to me.";
 
+flash = false;
+alpha_pulser = 0;
+
 attack  = 10;
 defence = 10;
 
@@ -21,7 +24,8 @@ health_text_color = c_white;
 
 spare_percent = 0; // 0 to 100
 
+render_offset = new Vector2();
+
 // Enemy needs name, acts, description, attack and defence, 
 // Acts can be stored in a ds grid or 2d array, with a name and execution script as well as stats
 
-render_offset = new Vector2();

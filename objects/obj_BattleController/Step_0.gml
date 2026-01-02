@@ -255,7 +255,7 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 #region Action Selection
 
 // In hindsight just having a number instead of an ENUM would have worked for this
-if(global.BattleState == BATTLESTATE.PLAYERSELECTING)
+if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 {
 	if(main_menu_phase == MAINMENUSTATE.SELECTINGATTACKTARGET && menu_swap_delay == 0)
 	{
@@ -347,15 +347,15 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING)
 				break;
 			
 				case ACTION.SPARE:
-					//currently_hovered_action = ACTION.ITEM;
+					
 				break;
 			
 				case ACTION.ITEM:
-					//currently_hovered_action = ACTION.MAGICORACT;
+					OpenItemSelectScreen();
 				break;
 			
 				case ACTION.MAGICORACT:
-					//currently_hovered_action = ACTION.ATTACK;
+					
 				break;
 			
 				case ACTION.ATTACK:
@@ -374,7 +374,7 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING)
 			
 				var _whatWasIDoing = global.PartyArray[| chara_currently_selecting_action].whatAmIDoingThisTurn;
 				currently_hovered_action = _whatWasIDoing;
-		
+				
 				switch (_whatWasIDoing)
 				{
 					case ACTION.DEFEND:
@@ -386,7 +386,7 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING)
 					break;
 			
 					case ACTION.ITEM:
-						//currently_hovered_action = ACTION.MAGICORACT;
+						UndoItem();
 					break;
 			
 					case ACTION.MAGICORACT:
@@ -402,6 +402,45 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING)
 		}
 	}
 	
+	if(main_menu_phase == MAINMENUSTATE.SELECTINGITEM && menu_swap_delay == 0)
+	{
+		var _selectedItemIndex = global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex;
+		
+		// Go up in selector list if up is pressed and not at top of list
+		if(InputPressed(INPUT_VERB.UP) && _selectedItemIndex > 1)
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex -= 2;
+				
+		// hover next in list if there is a next in list to hover
+		if(InputPressed(INPUT_VERB.DOWN))
+		{
+			if(_selectedItemIndex < array_length(global.MainInventory) - 2)
+				global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex += 2;
+			else if(_selectedItemIndex < array_length(global.MainInventory) - 1)
+				global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex += 1;
+		}
+		
+		// This is kinda funny lmao. Left and right do the same thing. also this solution is funny
+		if(InputPressed(INPUT_VERB.LEFT) || InputPressed(INPUT_VERB.RIGHT))
+		{
+			if(_selectedItemIndex mod 2 == 1)
+				global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex--;
+			else if (_selectedItemIndex mod 2 == 0 && (_selectedItemIndex < array_length(global.MainInventory) - 1))
+				global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex++;
+		}
+		
+		if(InputPressed(INPUT_VERB.ACCEPT))
+		{
+			// Confirm Selection
+			//show_debug_message(global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex);
+			audio_play_sound(snd_UTDRSelect,1,0);
+		}
+		
+		if(InputPressed(INPUT_VERB.CANCEL))
+		{
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex = 0;
+			main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
+		}
+	}
 }
 
 if(menu_swap_delay > 0)

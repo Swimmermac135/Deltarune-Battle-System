@@ -8,7 +8,9 @@ function CharacterDataFull(_CharaID, _RenderPuppet) constructor{
 	whatAmIDoingThisTurn = ACTION.UNDECIDED; // What (broad category) Am I doing this turn?
 	
 	thisTurnsSelectedItem       = ITEMID.None;	 // If using ITEM, what item
-	thisTurnsTarget       = 0;				 
+	thisTurnsSelectedItemIndex  = 0;
+	
+	thisTurnsTarget       = 0;					 // If attacking	 
 	
 	// Set to true if rendering will be controlled elsewhere for the renderpuppet (cutscene)
 	RenderOverride = false;

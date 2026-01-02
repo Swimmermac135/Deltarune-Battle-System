@@ -123,9 +123,11 @@ switch(main_menu_phase)
 		// Keep the typewriter visible i think idk i just need this here for now
 	break;
 	
+	// This probably also works for selecting ACT target (not selecting an act)
 	case MAINMENUSTATE.SELECTINGATTACKTARGET:
+		#region Selecting Attack Target
 		
-		var _currentPage = floor(global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget / 3) - 1;
+		var _currentPage = floor(global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget / 3);
 		
 		if(_currentPage < 0)
 			_currentPage = 0;
@@ -136,13 +138,22 @@ switch(main_menu_phase)
 		draw_sprite_ext(spr_BattleRoom_Mercy, 0, 560, 113, 0.5, 0.3, 0, c_white, 1);
 		draw_sprite_ext(spr_BattleRoom_HP, 0, 430, 113, 0.5, 0.3, 0, c_white, 1);
 		
+		// There is a lot of magic numbers in these parts but I think most of them are self explanatory enough. Also I am lazy
+		
 		// Render enemy names
 		if(_numChoicesOnPage >= 1)
 		{
-			if(_selectedSlot == 0)
-				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[0].x - 20, mainmenu_selectortext_position[0].y + 15);
-			
 			var _currentEnemy = global.EnemyArray[| _currentPage*3];
+					
+			if(_selectedSlot == 0)
+			{
+				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[0].x - 20, mainmenu_selectortext_position[0].y + 15);
+				_currentEnemy.flash = true;	
+			}
+			else
+			{
+				_currentEnemy.flash = false;		
+			}
 			
 			// Draw Name
 			scribble(_currentEnemy.displayName).scale(.5).draw(mainmenu_selectortext_position[0].x, mainmenu_selectortext_position[0].y);
@@ -166,10 +177,17 @@ switch(main_menu_phase)
 		
 		if(_numChoicesOnPage >= 2)
 		{
-			if(_selectedSlot == 1)
-				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[1].x - 20, mainmenu_selectortext_position[1].y + 15);
-			
 			var _currentEnemy = global.EnemyArray[| _currentPage*3 + 1];
+			
+			if(_selectedSlot == 1)
+			{
+				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[1].x - 20, mainmenu_selectortext_position[1].y + 15);
+					_currentEnemy.flash = true;	
+			}
+			else
+			{
+				_currentEnemy.flash = false;		
+			}
 			
 			// Draw Name
 			scribble(_currentEnemy.displayName).scale(.5).draw(mainmenu_selectortext_position[1].x, mainmenu_selectortext_position[1].y);
@@ -192,10 +210,17 @@ switch(main_menu_phase)
 		
 		if(_numChoicesOnPage >= 3)
 		{
-			if(_selectedSlot == 2)
-				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[2].x - 20, mainmenu_selectortext_position[2].y + 15);
-			
 			var _currentEnemy = global.EnemyArray[| _currentPage*3 + 2];
+			
+			if(_selectedSlot == 2)
+			{
+				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[2].x - 20, mainmenu_selectortext_position[2].y + 15);
+					_currentEnemy.flash = true;	
+			}
+			else
+			{
+				_currentEnemy.flash = false;		
+			}
 			
 			// Draw Name
 			scribble(_currentEnemy.displayName).scale(.5).draw(mainmenu_selectortext_position[2].x, mainmenu_selectortext_position[2].y);
@@ -215,8 +240,39 @@ switch(main_menu_phase)
 				scribble($"{_currentEnemy.spare_percent}%").transform(.4, .25, 0).flash(_currentEnemy.mercy_text_color, 1).draw(523, mainmenu_selectortext_position[2].y + 5);
 		}
 		
+		// Arrows to indicate other pages of enemies
+		if(_currentPage > 0)
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, mainmenu_selectortext_position[0].y + 10, 1, 1, 180, c_white, 1);
+			
+		if(ds_list_size(global.EnemyArray) > (_currentPage + 1) * 3)
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, mainmenu_selectortext_position[2].y + 20, 1, 1, 0, c_white, 1);
+		
+		#endregion
 	break;
 	
+	case MAINMENUSTATE.SELECTINGITEM:
+		#region Items
+		
+		// We need three rows of two items each. I don't want to use the code from the other rendering types so... it is time to write something actually "good"
+		
+		// Page offset (like earlier types)
+		var _page = floor(global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex / 6);
+		var _amountOnCurrentPage = clamp(array_length(global.MainInventory) - (_page * 6), 0, 6); // I think this will work, if over 6 and on page 0 then six 
+		
+		for (var _row = 0; _row < _amountOnCurrentPage; _row++) {
+			var _item = ds_map_find_value(global.ItemMap, global.MainInventory[_row + (_page * 6)]); // Find current item with page offset
+			scribble(_item.itemName).scale(.5).draw(35 + item_readout_px.x * (_row mod 2), 115 + floor(_row / 2) * (item_readout_px.y + item_readout_padding)); // Draw it in a convoluted way
+			
+			if(global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex == (_row + (_page * 6)))
+			{
+				draw_sprite(spr_BattleRoom_RedSoul, 0, 20 + item_readout_px.x * (_row mod 2), 130 + floor(_row / 2) * (item_readout_px.y + item_readout_padding));
+			}
+		}
+		
+		
+		
+		#endregion
+	break;
 	
 }
 

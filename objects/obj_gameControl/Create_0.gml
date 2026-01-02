@@ -309,7 +309,7 @@ enum ITEMID {
 
 ItemData_testArmor = {
 	
-	name        : "MaxArmor",
+	itemName    : "MaxArmor",
 	description : "Raises defence to unholy levels or something",
 	type        : ITEMTYPE.ARMOR, // Armor, weapon, consumable, etc
 	
@@ -323,11 +323,14 @@ ds_map_add(global.ItemMap, ITEMID.TestArmor, ItemData_testArmor);
 
 ItemData_testConsumable = {
 	
-	name        : "SuperFood",
-	description : "Heals... Something",
+	itemName    : "SuperFood",
+	description : "Heals\n100HP",
 	type        : ITEMTYPE.CONSUMABLE, // Armor, weapon, consumable, etc
 	
-	canBeEquippedOn : [CHARACTERS.None],
+	//canBeEquippedOn : [CHARACTERS.None],
+	//consumedOnUse : false, (if item is OTHER)
+	
+	healsWholeParty : false,
 	
 	validationScript : "",
 	
@@ -339,7 +342,8 @@ ds_map_add(global.ItemMap, ITEMID.TestConsumable, ItemData_testConsumable);
 
 #region Inventory
 
-global.MainInventory = array_create(12, ITEMID.TestConsumable);
+global.MainInventory = array_create(7, ITEMID.TestConsumable); // I go out of my way to make this an array instead of a ds_list because thats what it suggests
+// in the manual but like its the same shit
 
 #endregion
 
@@ -348,10 +352,11 @@ global.MainInventory = array_create(12, ITEMID.TestConsumable);
 global.PartyArrayIndexes = [];
 global.PartyArray      = ds_list_create(); // This is clearly a DS list. Why is it called PartyArray? [because it used to be an array and changing it would be annoying]
 
-global.BattleSkipIntro = true;
-global.LargePartyMode  = false; // This will likely remain unused for a long time. If I decide to implement it, It will allow for 6v6 fights
-global.OffsetPartyDraw = true; // This is annoying but sometimes with two person parties it looks nice if the two are offset from the center instead of the side. Go look at the chapter 2 rouxls fight
-global.MyFight         = true; // This one will probably actually never be needed but it is better to have it than not. All it does is remove player choice for cutscene fights like susie vs lancer in ch1
+global.BattleSkipIntro  = true;
+global.LargePartyMode   = false; // This will likely remain unused for a long time. If I decide to implement it, It will allow for for fights bigger than 3v3 (max 6v6 probably)
+global.OffsetPartyDraw  = false; // This is annoying but sometimes with two person parties it looks nice if the two are offset from the center instead of the side. Go look at the chapter 2 rouxls fight
+global.MyFight          = true; // This one will probably actually never be needed but it is better to have it than not. All it does is remove player choice for cutscene fights like susie vs lancer in ch1
+global.BattleSkipEnding = false;
 
 global.EnemyArrayIndexes = [];
 global.EnemyArray        = ds_list_create(); // yet again going with this silly system. Having the fulldata creation be done in the script would be easier
