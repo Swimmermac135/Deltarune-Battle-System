@@ -126,136 +126,55 @@ switch(main_menu_phase)
 	// This probably also works for selecting ACT target (not selecting an act)
 	case MAINMENUSTATE.SELECTINGATTACKTARGET:
 		#region Selecting Attack Target
-		
-		var _currentPage = floor(global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget / 3);
-		
-		if(_currentPage < 0)
-			_currentPage = 0;
-		
-		var _numChoicesOnPage = ds_list_size(global.EnemyArray) - (_currentPage * 3);
-		var _selectedSlot     =  global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget - (_currentPage * 3);
-		
+
 		draw_sprite_ext(spr_BattleRoom_Mercy, 0, 560, 113, 0.5, 0.3, 0, c_white, 1);
-		draw_sprite_ext(spr_BattleRoom_HP, 0, 430, 113, 0.5, 0.3, 0, c_white, 1);
+		draw_sprite_ext(spr_BattleRoom_HP, 0, 435, 113, 0.5, 0.3, 0, c_white, 1);
 		
-		// There is a lot of magic numbers in these parts but I think most of them are self explanatory enough. Also I am lazy
+		// Do not go into github history and look at the v1 version of this code, worst mistake of my life
 		
-		// Render enemy names
-		if(_numChoicesOnPage >= 1)
-		{
-			var _currentEnemy = global.EnemyArray[| _currentPage*3];
-					
-			if(_selectedSlot == 0)
-			{
-				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[0].x - 20, mainmenu_selectortext_position[0].y + 15);
-				_currentEnemy.flash = true;	
-			}
-			else
-			{
-				_currentEnemy.flash = false;		
-			}
+		var _page = floor(global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget / 3);
+		var _amountOnCurrentPage = clamp(array_length(global.MainInventory) - (_page * 3), 0, 3);
+		var _selectedEnemy =  global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget;
+		
+		for (var _row = 0; _row < _amountOnCurrentPage; _row++) {
+			var _currentEnemy = global.EnemyArray[| _selectedEnemy];
 			
-			// Draw Name
-			scribble(_currentEnemy.displayName).scale(.5).draw(mainmenu_selectortext_position[0].x, mainmenu_selectortext_position[0].y);
+			scribble(_currentEnemy.displayName).scale(.5).draw(80, 115 + _row * (item_readout_px.y + item_readout_padding));
 			
-			// Draw Healthbar
-			draw_healthbar(410, mainmenu_selectortext_position[0].y + 21, 495, mainmenu_selectortext_position[0].y + 5, (_currentEnemy.HP / _currentEnemy.max_HP) * 100, _currentEnemy.health_color.y, _currentEnemy.health_color.x, _currentEnemy.health_color.x, 0, true, false);
+			var _healthPercent = (_currentEnemy.HP / _currentEnemy.max_HP) * 100;
+			
+			// Health Meter
+			draw_healthbar(415, 137 + _row * (item_readout_px.y + item_readout_padding), 498, 120 + _row * (item_readout_px.y + item_readout_padding), _healthPercent, _currentEnemy.health_color.y, _currentEnemy.health_color.x, _currentEnemy.health_color.x, 0, true, false);
+			// Mercy Meter
+			draw_healthbar(518, 137 + _row * (item_readout_px.y + item_readout_padding), 603, 120 + _row * (item_readout_px.y + item_readout_padding), _currentEnemy.spare_percent, _currentEnemy.mercy_color.y, _currentEnemy.mercy_color.x, _currentEnemy.mercy_color.x, 0, true, false);
 			
 			if(_currentEnemy.health_percent_unknown)
-				scribble("???").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[0].y + 5);
+				scribble("???").transform(.5, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(417, 121 + _row * (item_readout_px.y + item_readout_padding));
 			else
-				scribble($"{round((_currentEnemy.HP / _currentEnemy.max_HP) * 100)}%").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[0].y + 5);
-				
-			// Draw Mercymeter 
-			draw_healthbar(518, mainmenu_selectortext_position[0].y + 21, 603, mainmenu_selectortext_position[0].y + 5,_currentEnemy.spare_percent, _currentEnemy.mercy_color.y, _currentEnemy.mercy_color.x, _currentEnemy.mercy_color.x, 0, true, false);
-			//scribble(_currentEnemy.displayName).scale(.4).draw(415, mainmenu_selectortext_position[0].y);
-			if(_currentEnemy.can_be_spared)
-				scribble($"{_currentEnemy.spare_percent}%").transform(.4, .25, 0).flash(_currentEnemy.mercy_text_color, 1).draw(523, mainmenu_selectortext_position[0].y + 5);
+				scribble($"{round(_healthPercent)}%").transform(.5, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(417, 121 + _row * (item_readout_px.y + item_readout_padding));
 			
+			if(_currentEnemy.can_be_spared) // Update later to draw the x over the mercy meter if the enemy cannot be spared at all. I am leaving this unimplemented for now
+				scribble($"{_currentEnemy.spare_percent}%").transform(.5, .25, 0).flash(_currentEnemy.mercy_text_color, 1).draw(523, 121 + _row * (item_readout_px.y + item_readout_padding));
 			
-		}
-		
-		if(_numChoicesOnPage >= 2)
-		{
-			var _currentEnemy = global.EnemyArray[| _currentPage*3 + 1];
-			
-			if(_selectedSlot == 1)
-			{
-				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[1].x - 20, mainmenu_selectortext_position[1].y + 15);
-					_currentEnemy.flash = true;	
-			}
-			else
-			{
-				_currentEnemy.flash = false;		
-			}
-			
-			// Draw Name
-			scribble(_currentEnemy.displayName).scale(.5).draw(mainmenu_selectortext_position[1].x, mainmenu_selectortext_position[1].y);
-			
-			// Draw Healthbar
-			draw_healthbar(410, mainmenu_selectortext_position[1].y + 21, 495, mainmenu_selectortext_position[1].y + 5, (_currentEnemy.HP / _currentEnemy.max_HP) * 100, _currentEnemy.health_color.y, _currentEnemy.health_color.x, _currentEnemy.health_color.x, 0, true, false);
-			
-			if(_currentEnemy.health_percent_unknown)
-				scribble("???").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[1].y + 5);
-			else
-				scribble($"{round((_currentEnemy.HP / _currentEnemy.max_HP) * 100)}%").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[1].y + 5);
-				
-			// Draw Mercymeter 
-			draw_healthbar(518, mainmenu_selectortext_position[1].y + 21, 603, mainmenu_selectortext_position[1].y + 5,_currentEnemy.spare_percent, _currentEnemy.mercy_color.y, _currentEnemy.mercy_color.x, _currentEnemy.mercy_color.x, 0, true, false);
-
-			if(_currentEnemy.can_be_spared)
-				scribble($"{_currentEnemy.spare_percent}%").transform(.4, .25, 0).flash(_currentEnemy.mercy_text_color, 1).draw(523, mainmenu_selectortext_position[1].y + 5);
-			
-		}
-		
-		if(_numChoicesOnPage >= 3)
-		{
-			var _currentEnemy = global.EnemyArray[| _currentPage*3 + 2];
-			
-			if(_selectedSlot == 2)
-			{
-				draw_sprite(current_selector_icon, 0, mainmenu_selectortext_position[2].x - 20, mainmenu_selectortext_position[2].y + 15);
-					_currentEnemy.flash = true;	
-			}
-			else
-			{
-				_currentEnemy.flash = false;		
-			}
-			
-			// Draw Name
-			scribble(_currentEnemy.displayName).scale(.5).draw(mainmenu_selectortext_position[2].x, mainmenu_selectortext_position[2].y);
-			
-			// Draw Healthbar
-			draw_healthbar(410, mainmenu_selectortext_position[2].y + 21, 495, mainmenu_selectortext_position[2].y + 5, (_currentEnemy.HP / _currentEnemy.max_HP) * 100, _currentEnemy.health_color.y, _currentEnemy.health_color.x, _currentEnemy.health_color.x, 0, true, false);
-			
-			if(_currentEnemy.health_percent_unknown)
-				scribble("???").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[2].y + 5);
-			else
-				scribble($"{round((_currentEnemy.HP / _currentEnemy.max_HP) * 100)}%").transform(.4, .25, 0).flash(_currentEnemy.health_text_color, 1).draw(415, mainmenu_selectortext_position[2].y + 5);
-				
-			// Draw Mercymeter 
-			draw_healthbar(518, mainmenu_selectortext_position[2].y + 21, 603, mainmenu_selectortext_position[2].y + 5,_currentEnemy.spare_percent, _currentEnemy.mercy_color.y, _currentEnemy.mercy_color.x, _currentEnemy.mercy_color.x, 0, true, false);
-
-			if(_currentEnemy.can_be_spared)
-				scribble($"{_currentEnemy.spare_percent}%").transform(.4, .25, 0).flash(_currentEnemy.mercy_text_color, 1).draw(523, mainmenu_selectortext_position[2].y + 5);
+			if(_selectedEnemy == (_row + (_page * 3))) // Draw soul next to the hovered option
+				draw_sprite(current_selector_icon, 0, 65, 130 + _row * (item_readout_px.y + item_readout_padding));
 		}
 		
 		// Arrows to indicate other pages of enemies
-		if(_currentPage > 0)
-			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, mainmenu_selectortext_position[0].y + 10, 1, 1, 180, c_white, 1);
+		if(_page > 0)
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, 130 - (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 180, c_white, 1);
 			
-		if(ds_list_size(global.EnemyArray) > (_currentPage + 1) * 3)
-			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, mainmenu_selectortext_position[2].y + 20, 1, 1, 0, c_white, 1);
+		if(ds_list_size(global.PartyArray) > (_page + 1) * 3)
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, 190 + (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 0, c_white, 1);
+		
+		item_readout_arrow_sinpulser += .75;
 		
 		#endregion
 	break;
 	
 	case MAINMENUSTATE.SELECTINGITEM:
 		#region Items
-		
-		// We need three rows of two items each. I don't want to use the code from the other rendering types so... it is time to write something actually "good"
-		
-		// Page offset (like earlier types)
+		// We need three rows of two items each. I don't want to use the code from the other rendering type so... it is time to write something actually "good"
 		var _page = floor(global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex / 6);
 		var _amountOnCurrentPage = clamp(array_length(global.MainInventory) - (_page * 6), 0, 6); // I think this will work, if over 6 and on page 0 then six 
 		
@@ -265,11 +184,50 @@ switch(main_menu_phase)
 			
 			if(global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex == (_row + (_page * 6)))
 			{
-				draw_sprite(spr_BattleRoom_RedSoul, 0, 20 + item_readout_px.x * (_row mod 2), 130 + floor(_row / 2) * (item_readout_px.y + item_readout_padding));
+				draw_sprite(current_selector_icon, 0, 20 + item_readout_px.x * (_row mod 2), 130 + floor(_row / 2) * (item_readout_px.y + item_readout_padding));
+				scribble(_item.description).scale(.5).line_spacing("90%").draw(80 + item_readout_px.x * 2, 115);
 			}
 		}
 		
+		// Arrows to indicate other pages of items
+		if(_page > 0)
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 465, 130 - (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 180, c_white, 1);
+			
+		if(array_length(global.MainInventory) > (_page + 1) * 6)
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 465, 190 + (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 0, c_white, 1);
 		
+		item_readout_arrow_sinpulser += .75;
+		
+		#endregion
+	break;
+	
+	case MAINMENUSTATE.ITEMSELECTPARTYMEMBER:
+		#region Party Readout
+		// One column of three
+		var _page = floor(global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedPartyTarget / 3);
+		var _amountOnCurrentPage = clamp(ds_list_size(global.PartyArray) - (_page * 3), 0, 3);
+			
+		for (var _row = 0; _row < _amountOnCurrentPage; _row++) {
+			var _partyMember = global.PartyArray[| _row];
+			scribble(_partyMember.CharaData.characterName).scale(.5).draw(80, 115 + _row * (item_readout_px.y + item_readout_padding));
+			
+			var _healthPercent = (_partyMember.CombatData.HP / _partyMember.CombatData.maxHP) * 100;
+			draw_healthbar(405, 120 + _row * (item_readout_px.y + item_readout_padding), 500, 135 + _row * (item_readout_px.y + item_readout_padding), _healthPercent, _partyMember.CharaData.healthColor.y, _partyMember.CharaData.healthColor.x, _partyMember.CharaData.healthColor.x, 0, true, false);
+			if(sign(_healthPercent) = -1) // Draw the reverse healthbar if health is negative
+				draw_healthbar(310, 120 + _row * (item_readout_px.y + item_readout_padding), 405, 135 + _row * (item_readout_px.y + item_readout_padding), abs(_healthPercent), _partyMember.CharaData.healthColor.y, _partyMember.CharaData.healthColor.x, _partyMember.CharaData.healthColor.x, 1, false, false);
+			
+			if(global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedPartyTarget == (_row + (_page * 3))) // Draw soul next to the hovered option
+				draw_sprite(current_selector_icon, 0, 65, 130 + _row * (item_readout_px.y + item_readout_padding));
+		}
+		
+		// Arrows to indicate other pages of characters
+		if(_page > 0)
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, 130 - (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 180, c_white, 1);
+			
+		if(ds_list_size(global.PartyArray) > (_page + 1) * 3)
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, 190 + (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 0, c_white, 1);
+		
+		item_readout_arrow_sinpulser += .75;
 		
 		#endregion
 	break;

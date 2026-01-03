@@ -2,7 +2,8 @@ HP = 1000;
 max_HP = HP;
 can_be_attacked = true;
 can_be_acted    = true;
-can_be_spared   = true;
+can_be_spared   = true; // This is not if the enemy is currently able to be spared, but if it is possible to spare it at all
+is_tired        = false;
 
 health_percent_unknown = false;
 

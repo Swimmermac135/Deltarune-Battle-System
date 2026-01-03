@@ -2,6 +2,7 @@
 
 #region Scribble
 	scribble_font_set_default("fnt_DETERMINATION");
+	scribble_glyph_set("fnt_DETERMINATION", all, SCRIBBLE_GLYPH.SEPARATION, -4, true);
 #endregion
 
 #region Load Encounter Data
@@ -58,6 +59,8 @@ characterData_Kris =
 	characterIconInjured        : spr_BattleRoom_CharaPanelIcon_KrisInjured,
 	characterIconPortraitOffset : new Vector2(-79, 3),
 	
+	healthColor : new Vector2(c_lime,   #7F080C),
+	
 	characterIconAttack  : spr_BattleRoom_CharaPanelIcon_KrisAttack,
 	characterIconAct     : spr_BattleRoom_CharaPanelIcon_KrisAct,
 	characterIconMagic   : spr_BattleRoom_CharaPanelIcon_KrisMagic,
@@ -82,6 +85,9 @@ characterData_Kris =
 	characterAnimationAttack      : [spr_BattleRoom_CharaAnimation_KrisAttack, 0.5],
 	characterAnimationReadyAttack : [spr_BattleRoom_CharaAnimation_KrisReadyAttack, 1],
 	
+	characterAnimationReadyItem   : [spr_BattleRoom_CharaAnimation_KrisReadyItem, .5],
+	characterAnimationUseItem     : [spr_BattleRoom_CharaAnimation_KrisUseItem, .5],
+	
 }
 
 ds_map_add(global.CharacterRefMap, CHARACTERS.Kris, characterData_Kris);
@@ -103,6 +109,8 @@ characterData_Susie =
 	characterIcon		        : spr_BattleRoom_CharaPanelIcon_Susie,
 	characterIconInjured        : spr_BattleRoom_CharaPanelIcon_SusieInjured,
 	characterIconPortraitOffset : new Vector2(-78, 3),
+	
+	healthColor : new Vector2(c_lime,   #7F080C),
 	
 	characterIconAttack  : spr_BattleRoom_CharaPanelIcon_SusieAttack,
 	characterIconAct     : spr_BattleRoom_CharaPanelIcon_SusieAct,
@@ -126,6 +134,9 @@ characterData_Susie =
 	characterAnimationDefend      : [spr_BattleRoom_CharaAnimation_SusieDefend, 0.5],
 	characterAnimationAttack      : [spr_BattleRoom_CharaAnimation_SusieAttack, 0.5],
 	characterAnimationReadyAttack : [spr_BattleRoom_CharaAnimation_SusieReadyAttack, 1],
+	
+	characterAnimationReadyItem   : [spr_BattleRoom_CharaAnimation_SusieReadyItem, .25],
+	characterAnimationUseItem     : [spr_BattleRoom_CharaAnimation_SusieUseItem, .5],
 }
 
 ds_map_add(global.CharacterRefMap, CHARACTERS.Susie, characterData_Susie);
@@ -147,6 +158,8 @@ characterData_Ralsei =
 	characterIcon		        : spr_BattleRoom_CharaPanelIcon_Ralsei,
 	characterIconInjured        : spr_BattleRoom_CharaPanelIcon_RalseiInjured,
 	characterIconPortraitOffset : new Vector2(-76, 3),
+	
+	healthColor : new Vector2(c_lime,   #7F080C),
 	
 	characterIconAttack  : spr_BattleRoom_CharaPanelIcon_RalseiAttack,
 	characterIconAct     : spr_BattleRoom_CharaPanelIcon_RalseiAct,
@@ -170,6 +183,9 @@ characterData_Ralsei =
 	characterAnimationDefend      : [spr_BattleRoom_CharaAnimation_RalseiDefend, 0.5],
 	characterAnimationAttack      : [spr_BattleRoom_CharaAnimation_RalseiAttack, 0.5],
 	characterAnimationReadyAttack : [spr_BattleRoom_CharaAnimation_RalseiReadyAttack, 1],
+	
+	characterAnimationReadyItem   : [spr_BattleRoom_CharaAnimation_RalseiReadyItem, .1],
+	characterAnimationUseItem     : [spr_BattleRoom_CharaAnimation_RalseiUseItem, .5],
 }
 
 ds_map_add(global.CharacterRefMap, CHARACTERS.Ralsei, characterData_Ralsei);
@@ -186,6 +202,8 @@ characterData_None =
 	characterPanelExtColor     : $00FF00,
 	characterPanelState        : CHARAPANELSTATE.CLOSED,
 	characterPanelCurrentDrawY : 85,
+	
+	healthColor : new Vector2(c_lime,   #7F080C),
 	
 	characterIconCurrentRender  : spr_none,
 	characterIcon		        : spr_none,
@@ -304,6 +322,7 @@ enum ITEMID {
 	None,
 	TestArmor,
 	TestConsumable,
+	DarkChocolate,
 	
 }
 
@@ -324,26 +343,42 @@ ds_map_add(global.ItemMap, ITEMID.TestArmor, ItemData_testArmor);
 ItemData_testConsumable = {
 	
 	itemName    : "SuperFood",
-	description : "Heals\n100HP",
+	description : "[c_gray]Heals\nall\n100HP",
 	type        : ITEMTYPE.CONSUMABLE, // Armor, weapon, consumable, etc
 	
 	//canBeEquippedOn : [CHARACTERS.None],
 	//consumedOnUse : false, (if item is OTHER)
 	
 	healsWholeParty : false,
-	
-	validationScript : "",
+	canOverheal : false, 
 	
 }
 
 ds_map_add(global.ItemMap, ITEMID.TestConsumable, ItemData_testConsumable);
 
+ItemData_DarkChocolate = {
+	
+	itemName    : "DarkChoco.",
+	description : "[c_gray]Heals\n200HP",
+	type        : ITEMTYPE.CONSUMABLE, // Armor, weapon, consumable, etc
+	
+	//canBeEquippedOn : [CHARACTERS.None],
+	//consumedOnUse : false, (if item is OTHER)
+	
+	healsWholeParty : false,
+	canOverheal : false, 
+}
+
+ds_map_add(global.ItemMap, ITEMID.DarkChocolate, ItemData_DarkChocolate);
+
 #endregion
 
 #region Inventory
 
-global.MainInventory = array_create(7, ITEMID.TestConsumable); // I go out of my way to make this an array instead of a ds_list because thats what it suggests
-// in the manual but like its the same shit
+global.MainInventory = array_create(4, ITEMID.TestConsumable); // I go out of my way to make this an array instead of a ds_list because thats what it suggests
+array_push(global.MainInventory, ITEMID.DarkChocolate);		   // in the manual but like its the same shit
+array_push(global.MainInventory, ITEMID.TestConsumable);
+array_push(global.MainInventory, ITEMID.TestConsumable);
 
 #endregion
 

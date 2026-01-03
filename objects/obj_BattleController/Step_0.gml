@@ -257,29 +257,7 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 // In hindsight just having a number instead of an ENUM would have worked for this
 if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 {
-	if(main_menu_phase == MAINMENUSTATE.SELECTINGATTACKTARGET && menu_swap_delay == 0)
-	{
-		
-		// Go up in selector list if up is pressed and not at top of list
-		if(InputPressed(INPUT_VERB.UP) &&  global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget > 0)
-			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget--;
-			
-		// hover next in list if there is a next in list to hover
-		if(InputPressed(INPUT_VERB.DOWN) && global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget < ds_list_size(global.EnemyArray) - 1)
-			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget++;
-			
-		if(InputPressed(INPUT_VERB.ACCEPT) && global.EnemyArray[| global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget].can_be_attacked)
-		{
-			ConfirmAttack();
-			audio_play_sound(snd_UTDRSelect,1,0);
-		}
-		
-		if(InputPressed(INPUT_VERB.CANCEL))
-		{
-			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget = 0;
-			main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
-		}
-	}
+
 	
 	if(main_menu_phase == MAINMENUSTATE.SELECTINGMAINACTION && menu_swap_delay == 0)
 	{
@@ -402,6 +380,30 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 		}
 	}
 	
+	if(main_menu_phase == MAINMENUSTATE.SELECTINGATTACKTARGET && menu_swap_delay == 0)
+	{
+		
+		// Go up in selector list if up is pressed and not at top of list
+		if(InputPressed(INPUT_VERB.UP) &&  global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget > 0)
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget--;
+			
+		// hover next in list if there is a next in list to hover
+		if(InputPressed(INPUT_VERB.DOWN) && global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget < ds_list_size(global.EnemyArray) - 1)
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget++;
+			
+		if(InputPressed(INPUT_VERB.ACCEPT) && global.EnemyArray[| global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget].can_be_attacked)
+		{
+			ConfirmAttack();
+			audio_play_sound(snd_UTDRSelect,1,0);
+		}
+		
+		if(InputPressed(INPUT_VERB.CANCEL))
+		{
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget = 0;
+			main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
+		}
+	}
+	
 	if(main_menu_phase == MAINMENUSTATE.SELECTINGITEM && menu_swap_delay == 0)
 	{
 		var _selectedItemIndex = global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex;
@@ -432,15 +434,53 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 		{
 			// Confirm Selection
 			//show_debug_message(global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex);
-			audio_play_sound(snd_UTDRSelect,1,0);
+			var _index = global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex;
+			if(ds_map_find_value(global.ItemMap, global.MainInventory[_index]).healsWholeParty == false)
+			{
+				main_menu_phase = MAINMENUSTATE.ITEMSELECTPARTYMEMBER;
+				menu_swap_delay = 2;
+				audio_play_sound(snd_UTDRSelect,1,0);
+			}
+			else
+			{
+				ConfirmItemUse();
+			}
 		}
 		
 		if(InputPressed(INPUT_VERB.CANCEL))
 		{
-			global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex = 0;
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex   = 0;
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedPartyTarget = 0;
 			main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
 		}
 	}
+	
+	if(main_menu_phase == MAINMENUSTATE.ITEMSELECTPARTYMEMBER && menu_swap_delay == 0)
+	{
+		var _selectedPartyTarget = global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedPartyTarget;
+		
+		// Go up in selector list if up is pressed and not at top of list
+		if(InputPressed(INPUT_VERB.UP)   && _selectedPartyTarget > 0)
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedPartyTarget--;
+				
+		// hover next in list if there is a next in list to hover
+		if(InputPressed(INPUT_VERB.DOWN) && _selectedPartyTarget < ds_list_size(global.PartyArray) - 1)	
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedPartyTarget++;
+		
+		if(InputPressed(INPUT_VERB.ACCEPT))
+		{
+			// Confirm Selection
+			//show_debug_message(global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedItemIndex);
+			ConfirmItemUse();
+		}
+		
+		if(InputPressed(INPUT_VERB.CANCEL))
+		{
+			global.PartyArray[| chara_currently_selecting_action].thisTurnsSelectedPartyTarget = 0;
+			main_menu_phase = MAINMENUSTATE.SELECTINGITEM;
+		}
+	}
+	
 }
 
 if(menu_swap_delay > 0)

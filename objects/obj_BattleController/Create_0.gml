@@ -47,9 +47,14 @@ enum MAINMENUSTATE
 	SELECTINGATTACKTARGET,
 	SELECTINGACTTARGET,
 	SELECTINGMAGICTARGET,
+	
 	SELECTINGITEM,
+	ITEMSELECTPARTYMEMBER,
+	
 	SELECTINGSPARETARGET,
 	SHOWINGTYPEWRITER,   // Basically if there is text being shown
+	
+
 }
 
 #endregion
@@ -202,7 +207,7 @@ currently_hovered_action = ACTION.ATTACK;
 menu_swap_delay = 0
 
 // Enemy/ally name render position
-mainmenu_selectortext_position = [new Vector2(65, 115), new Vector2(65, 145), new Vector2(65, 175)];
+mainmenu_selectortext_position = [new Vector2(65, 115)];
 current_selector_icon          = spr_BattleRoom_RedSoul;
 
 action_button_padding = new Vector2(5, 3);
@@ -219,6 +224,10 @@ chara_healthbar_btmright = new Vector2(96, 10);
 // Item readout padding test
 item_readout_px = new Vector2(210, 20);
 item_readout_padding = 10;
+
+item_readout_arrow_sinpulser = 0; // This will probably be used for a lot, not just arrow sinpulse
+
+// Character readout
 
 // Sprites
 //mainmenu_spr_background = spr_BattleRoom_MainMenu_Background;
