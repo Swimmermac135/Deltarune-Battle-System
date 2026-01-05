@@ -1,3 +1,6 @@
+if (global.DebugMode)
+	draw_text(10, 10, "FPS = " + string(fps));
+
 #region Quitting Game
 
 	if(time_spent_holding_escape > 0)

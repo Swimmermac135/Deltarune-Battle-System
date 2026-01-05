@@ -94,6 +94,9 @@ draw_surface(surface_TPmeter, surface_TPmeter_draw.x, surface_TPmeter_draw.y);
 // I Probably should have drawn this with DRAW UI but I don't like draw UI cause I have to use ratios to align things (or maybe not anymore? last time I did UI was before the UI editor update)
 // Also learning how to use surfaces is fun and a nice skill to have. Also it means I dont have to add an "offset" to literally everything to animate slide in/out
 // Create render target surface if it doesn't exist yet
+
+// I changed it to draw GUI and it seemed to just work? We shall see
+
 if (!surface_exists(surface_mainmenu))
 	surface_mainmenu = surface_create(640, 220); 
 
@@ -425,3 +428,4 @@ draw_surface(surface_mainmenu, surface_mainmenu_draw.x, surface_mainmenu_draw.y)
 
 #endregion
 }
+

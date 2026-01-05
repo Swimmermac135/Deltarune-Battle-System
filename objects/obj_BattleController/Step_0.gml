@@ -258,11 +258,11 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 {
 
-	
 	if(main_menu_phase == MAINMENUSTATE.SELECTINGMAINACTION && menu_swap_delay == 0)
 	{
 		if(InputPressed(INPUT_VERB.RIGHT))
 		{
+			audio_play_sound(snd_UTDRSqueak,1,0);
 			switch (currently_hovered_action)
 			{
 				case ACTION.DEFEND:
@@ -285,11 +285,12 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 					currently_hovered_action = ACTION.DEFEND;
 				break;	
 			}
-			audio_play_sound(snd_UTDRSqueak,1,0);
+			
 		}
 	
 		if(InputPressed(INPUT_VERB.LEFT))
 		{
+			audio_play_sound(snd_UTDRSqueak,1,0);
 			switch (currently_hovered_action)
 			{
 				case ACTION.DEFEND:
@@ -313,7 +314,7 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 				break;
 		
 			}
-			audio_play_sound(snd_UTDRSqueak,1,0);
+			
 		}
 	
 		if(InputPressed(INPUT_VERB.ACCEPT))

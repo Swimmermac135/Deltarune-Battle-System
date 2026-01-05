@@ -2,7 +2,7 @@
 
 #region Scribble
 	scribble_font_set_default("fnt_DETERMINATION");
-	scribble_glyph_set("fnt_DETERMINATION", all, SCRIBBLE_GLYPH.SEPARATION, -4, true);
+	scribble_glyph_set("fnt_DETERMINATION", all, SCRIBBLE_GLYPH.SEPARATION, -2, true);
 #endregion
 
 #region Load Encounter Data
