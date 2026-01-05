@@ -5,6 +5,9 @@ function ConfirmAttack(){
 	_currentChara.whatAmIDoingThisTurn                 = ACTION.ATTACK;
 	_currentChara.CharaData.characterIconCurrentRender = _currentChara.CharaData.characterIconAttack;
 	RenderPuppetPlayAnimation(_currentChara.RenderPuppet, _currentChara.CharaData.characterAnimationReadyAttack[0], _currentChara.CharaData.characterAnimationReadyAttack[1]);
+	
+	StopAllPulsing();
+	
 	SelectNextCharacter();
 	currently_hovered_action = ACTION.ATTACK;
 	main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
@@ -30,4 +33,11 @@ function UndoAttack(){
 	RenderPuppetPlayAnimation(_currentChara.RenderPuppet, _currentChara.CharaData.characterAnimationIdle[0], _currentChara.CharaData.characterAnimationIdle[1]);
 	menu_swap_delay = 2;
 	
+}
+
+function StopAllPulsing()
+{
+		for (var i = 0; i < ds_list_size(global.EnemyArray); i++) {
+	    global.EnemyArray[| i].flash = false; // Stop flashing
+	}	
 }

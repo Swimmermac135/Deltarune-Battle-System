@@ -399,6 +399,7 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 		
 		if(InputPressed(INPUT_VERB.CANCEL))
 		{
+			StopAllPulsing();
 			global.PartyArray[| chara_currently_selecting_action].thisTurnsTarget = 0;
 			main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
 		}

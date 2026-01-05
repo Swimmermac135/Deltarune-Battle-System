@@ -160,14 +160,22 @@ switch(main_menu_phase)
 				draw_sprite(current_selector_icon, 0, 65, 130 + _row * (item_readout_px.y + item_readout_padding));
 		}
 		
+		for (var i = 0; i < ds_list_size(global.EnemyArray); i++) {
+			
+			if(i = _selectedEnemy)
+				global.EnemyArray[| i].flash = true;
+			else
+				global.EnemyArray[| i].flash = false; // Stop flashing
+		}
+		
 		// Arrows to indicate other pages of enemies
 		if(_page > 0)
-			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, 130 - (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 180, c_white, 1);
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, 130 - abs(sin(item_readout_arrow_sinpulser / 10)) * 5, 1, 1, 180, c_white, 1);
 			
 		if(ds_list_size(global.PartyArray) > (_page + 1) * 3)
-			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, 190 + (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 0, c_white, 1);
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 625, 190 + abs(sin(item_readout_arrow_sinpulser / 10)) * 5, 1, 1, 0, c_white, 1);
 		
-		item_readout_arrow_sinpulser += .75;
+		item_readout_arrow_sinpulser++;
 		
 		#endregion
 	break;
@@ -191,12 +199,12 @@ switch(main_menu_phase)
 		
 		// Arrows to indicate other pages of items
 		if(_page > 0)
-			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 465, 130 - (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 180, c_white, 1);
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 465, 130 - abs(sin(item_readout_arrow_sinpulser / 10)) * 5, 1, 1, 180, c_white, 1);
 			
 		if(array_length(global.MainInventory) > (_page + 1) * 6)
-			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 465, 190 + (abs(sin(item_readout_arrow_sinpulser / 8)) + 0.25) * 5, 1, 1, 0, c_white, 1);
+			draw_sprite_ext(spr_BattleRoom_Arrow, 0, 465, 190 + abs(sin(item_readout_arrow_sinpulser / 10)) * 5, 1, 1, 0, c_white, 1);
 		
-		item_readout_arrow_sinpulser += .75;
+		item_readout_arrow_sinpulser++;
 		
 		#endregion
 	break;
