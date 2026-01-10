@@ -26,7 +26,7 @@ function ConfirmItemUse()
 	RenderPuppetPlayAnimation(_currentChara.RenderPuppet, _currentChara.CharaData.characterAnimationReadyItem[0], _currentChara.CharaData.characterAnimationReadyItem[1]);
 	
 	SelectNextCharacter();	
-	currently_hovered_action = ACTION.ATTACK;
+	currently_hovered_action = 0;
 	main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
 	menu_swap_delay = 2;
 }

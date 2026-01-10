@@ -7,9 +7,6 @@ function Defend(){
 	RenderPuppetPlayAnimation(_currentChara.RenderPuppet, _currentChara.CharaData.characterAnimationDefend[0], _currentChara.CharaData.characterAnimationDefend[1], true);
 	AddTP(16);
 	SelectNextCharacter();
-	currently_hovered_action = ACTION.ATTACK;
-
-	
 }
 
 function UndoDefend(){

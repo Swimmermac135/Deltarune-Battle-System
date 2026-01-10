@@ -21,7 +21,12 @@ if(global.BattleState == BATTLESTATE.LOAD)
 		_renderPuppet.image_xscale = 2;
 		_renderPuppet.image_yscale = 2;
 		
-		ds_list_add(global.PartyArray, new CharacterDataFull(global.PartyArrayIndexes[i], _renderPuppet));
+		
+		var _charaActionListAssembly = [ACTION.ATTACK, ACTION.MAGIC, ACTION.ITEM, ACTION.SPARE, ACTION.DEFEND];
+		if(AnimationData_From_CharaID(global.PartyArrayIndexes[i]).characterUsesAct) // This doesnt need to be called twice. I should modify charadatafull so that it takes the animdata as an input so I only have to run this once
+			_charaActionListAssembly = [ACTION.ATTACK, ACTION.ACT, ACTION.ITEM, ACTION.SPARE, ACTION.DEFEND];
+		
+		ds_list_add(global.PartyArray, new CharacterDataFull(global.PartyArrayIndexes[i], _renderPuppet, _charaActionListAssembly));
 		ShowDebugMessageExt("BATTLESYSTEM FULLDATA MAKER", $"Created Entry for Character {i}: {global.PartyArray[| i].CharaData.characterName}");
 		
 	}
@@ -257,69 +262,33 @@ for (var i = 0; i < ds_list_size(global.PartyArray); ++i) {
 // In hindsight just having a number instead of an ENUM would have worked for this
 if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 {
-
+	global.PartyArray[| chara_currently_selecting_action].thisTurnsHoveredAction = currently_hovered_action;
+	
 	if(main_menu_phase == MAINMENUSTATE.SELECTINGMAINACTION && menu_swap_delay == 0)
 	{
 		if(InputPressed(INPUT_VERB.RIGHT))
 		{
+			if(currently_hovered_action < array_length(global.PartyArray[| chara_currently_selecting_action].myActionOptions) - 1)
+				currently_hovered_action++;
+			else
+				currently_hovered_action = 0;
+				
 			audio_play_sound(snd_UTDRSqueak,1,0);
-			switch (currently_hovered_action)
-			{
-				case ACTION.DEFEND:
-					currently_hovered_action = ACTION.ATTACK;
-				break;
-			
-				case ACTION.ATTACK:
-					currently_hovered_action = ACTION.MAGICORACT;
-				break;
-			
-				case ACTION.MAGICORACT:
-					currently_hovered_action = ACTION.ITEM;
-				break;
-			
-				case ACTION.ITEM:
-					currently_hovered_action = ACTION.SPARE;
-				break;
-			
-				case ACTION.SPARE:
-					currently_hovered_action = ACTION.DEFEND;
-				break;	
-			}
-			
 		}
 	
 		if(InputPressed(INPUT_VERB.LEFT))
 		{
+			if(currently_hovered_action > 0)
+				currently_hovered_action--;
+			else
+				currently_hovered_action = array_length(global.PartyArray[| chara_currently_selecting_action].myActionOptions) - 1;
+					
 			audio_play_sound(snd_UTDRSqueak,1,0);
-			switch (currently_hovered_action)
-			{
-				case ACTION.DEFEND:
-					currently_hovered_action = ACTION.SPARE;
-				break;
-			
-				case ACTION.SPARE:
-					currently_hovered_action = ACTION.ITEM;
-				break;
-			
-				case ACTION.ITEM:
-					currently_hovered_action = ACTION.MAGICORACT;
-				break;
-			
-				case ACTION.MAGICORACT:
-					currently_hovered_action = ACTION.ATTACK;
-				break;
-			
-				case ACTION.ATTACK:
-					currently_hovered_action = ACTION.DEFEND;
-				break;
-		
-			}
-			
 		}
 	
 		if(InputPressed(INPUT_VERB.ACCEPT))
 		{
-			switch (currently_hovered_action)
+			switch (global.PartyArray[| chara_currently_selecting_action].myActionOptions[currently_hovered_action])
 			{
 				case ACTION.DEFEND:
 					Defend();
@@ -333,7 +302,11 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 					OpenItemSelectScreen();
 				break;
 			
-				case ACTION.MAGICORACT:
+				case ACTION.MAGIC:
+					
+				break;
+				
+				case ACTION.ACT:
 					
 				break;
 			
@@ -341,6 +314,7 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 					SelectAttackTarget()
 				break;
 			}
+			
 			audio_play_sound(snd_UTDRSelect,1,0);
 		}
 	
@@ -351,8 +325,8 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 			
 				SelectPrevCharacter();
 			
-				var _whatWasIDoing = global.PartyArray[| chara_currently_selecting_action].whatAmIDoingThisTurn;
-				currently_hovered_action = _whatWasIDoing;
+				var _whatWasIDoing       = global.PartyArray[| chara_currently_selecting_action].whatAmIDoingThisTurn;
+				currently_hovered_action = global.PartyArray[| chara_currently_selecting_action].thisTurnsHoveredAction;
 				
 				switch (_whatWasIDoing)
 				{
@@ -368,8 +342,12 @@ if(global.BattleState == BATTLESTATE.PLAYERSELECTING && menu_swap_delay == 0)
 						UndoItem();
 					break;
 			
-					case ACTION.MAGICORACT:
-						//currently_hovered_action = ACTION.ATTACK;
+					case ACTION.MAGIC:
+					
+					break;
+				
+					case ACTION.ACT:
+					
 					break;
 			
 					case ACTION.ATTACK:

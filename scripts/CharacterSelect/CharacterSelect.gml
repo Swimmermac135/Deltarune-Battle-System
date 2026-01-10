@@ -4,6 +4,7 @@ function SelectNextCharacter(){
 	if(ds_list_size(global.PartyArray) > chara_currently_selecting_action)
 		chara_currently_selecting_action++;
 	
+	currently_hovered_action = 0;
 	menu_swap_delay = 2;
 }
 

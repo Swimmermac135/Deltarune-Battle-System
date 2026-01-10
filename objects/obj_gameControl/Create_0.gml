@@ -351,7 +351,7 @@ ItemData_testConsumable = {
 	
 	healsWholeParty : false,
 	canOverheal : false, 
-	
+	executionScript : 0, // Later this will be run on item use.
 }
 
 ds_map_add(global.ItemMap, ITEMID.TestConsumable, ItemData_testConsumable);
@@ -367,6 +367,7 @@ ItemData_DarkChocolate = {
 	
 	healsWholeParty : false,
 	canOverheal : false, 
+	executionScript : 0,
 }
 
 ds_map_add(global.ItemMap, ITEMID.DarkChocolate, ItemData_DarkChocolate);

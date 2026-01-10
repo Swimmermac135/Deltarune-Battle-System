@@ -9,7 +9,6 @@ function ConfirmAttack(){
 	StopAllPulsing();
 	
 	SelectNextCharacter();
-	currently_hovered_action = ACTION.ATTACK;
 	main_menu_phase = MAINMENUSTATE.SELECTINGMAINACTION;
 	menu_swap_delay = 2;
 }

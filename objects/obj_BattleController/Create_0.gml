@@ -35,7 +35,8 @@ enum ACTION
 {
 	UNDECIDED,
 	ATTACK,
-	MAGICORACT,
+	MAGIC,
+	ACT,
 	ITEM,
 	SPARE,
 	DEFEND,
@@ -201,7 +202,7 @@ else
 chara_currently_selecting_action = 0;
 
 // What action is currently selected
-currently_hovered_action = ACTION.ATTACK;
+currently_hovered_action = 0;
 
 // Artificial delay between menu transitions to stop multiselecting
 menu_swap_delay = 0
